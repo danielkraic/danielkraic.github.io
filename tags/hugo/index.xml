@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hugo on Linux blog</title>
+    <link>https://danielkraic.github.io/tags/hugo/</link>
+    <description>Recent content in Hugo on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 14 Sep 2015 19:54:07 +0200</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Build blog with Hugo</title>
+      <link>https://danielkraic.github.io/2015/09/14/build-blog-with-hugo/</link>
+      <pubDate>Mon, 14 Sep 2015 19:54:07 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/14/build-blog-with-hugo/</guid>
+      <description>
+
+&lt;p&gt;This blog is created with &lt;a href=&#34;http://www.gohugo.io&#34;&gt;Hugo&lt;/a&gt; - static website engine written in &lt;a href=&#34;https://golang.org/&#34;&gt;golang&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;requirements&#34;&gt;Requirements&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;git&lt;/li&gt;
+&lt;li&gt;Go 1.3+ (&lt;a href=&#34;https://danielkraic.github.io/post/gvm&#34;&gt;install golang with gvm&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;installation&#34;&gt;Installation&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;go get -v github.com/spf13/hugo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;create-new-site&#34;&gt;Create new site&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;hugo new site /path/to/site &amp;amp;&amp;amp; cd /path/to/site
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;create-new-post&#34;&gt;Create new post&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;hugo new post/first-post.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;install-slim-theme&#34;&gt;Install slim theme&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git clone https://github.com/zhe/hugo-theme-slim.git themes/slim
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;run-local-hugo-server&#34;&gt;Run local hugo server&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;hugo server --buildDrafts -w
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;build-site&#34;&gt;Build site&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;hugo
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

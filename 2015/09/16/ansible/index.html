@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Ansible &middot; </title>
+        <meta name="description" content="Ansible is a free software platform for configuring and managing computers. It combines multi-node software deployment, ad hoc task execution, and configuration management. It manages nodes over SSH or PowerShell and requires Python (2.4 or later) to be installed on them. The system uses YAML to express reusable descriptions of systems. Installation Install from PPA sudo apt-get install software-properties-common sudo apt-add-repository ppa:ansible/ansible sudo apt-get update sudo apt-get install ansible Install with pip sudo pip install ansible Configuration Add localhost to hosts file echo &quot;localhost ansible_connection=local&quot; &gt; ~/ansible_hosts export ANSIBLE_INVENTORY=~/ansible_hosts Setup SSH-agent ssh-agent bash ssh-add ~/.ssh/id_rsa Inventory [webservers] www[01:50].example.com [databases] db-[a:f].example.com [targets] localhost ansible_connection=local other1.example.com ansible_connection=ssh ansible_ssh_user=mpdehaan other2.example.com ansible_connection=ssh ansible_ssh_user=mdehaan Ad-Hoc Commands Patterns ansible &lt;pattern_goes_here&gt; -m &lt;module_name&gt; -a &lt;arguments&gt; Ping hosts # ping ansible all -m ping # ask ssh password ansible all -m ping --ask-pass # as bruce $ ansible all -m ping -u bruce # as bruce, sudoing to root $ ansible all -m ping -u bruce --sudo # as bruce, sudoing to batman $ ansible all -m ping -u bruce --sudo --sudo-user batman Run command ansible localhost -a &quot;/bin/echo hello&quot; ansible localhost -a &quot;uname -a&quot; ansible localhost -m shell -a &#39;echo $TERM&#39; Run command in parallel ansible atlanta -a &quot;/sbin/reboot&quot; -f 10 Run as other user with sudo ansible atlanta -a &quot;/usr/bin/foo&quot; -u username --sudo [--ask-sudo-pass] File # create file and set permissions ansible webservers -m file -a &quot;dest=/srv/foo/b.txt mode=600 owner=mdehaan group=mdehaan&quot; # create directory ansible webservers -m file -a &quot;dest=/path/to/c mode=755 owner=mdehaan group=mdehaan state=directory&quot; # delete file ansible webservers -m file -a &quot;dest=/path/to/c state=absent&quot; Copy # copy file ansible atlanta -m copy -a &quot;src=/etc/hosts dest=/tmp/hosts&quot; ansible atlanta -m copy -a &quot;src=/srv/myfiles/foo.conf dest=/etc/foo.conf owner=foo group=foo mode=0644 backup=yes&quot; ansible atlanta -m copy -a &quot;src=/mine/sudoers dest=/etc/sudoers validate=&#39;visudo -cf %s&#39;&quot; Fetch # fetch file from remote node ansible atlanta -m fetch -a &quot;src=/tmp/somefile dest=/tmp/fetched&quot; ansible atlanta -m fetch -a &quot;src=/tmp/somefile dest=/tmp/prefix-{{ ansible_hostname }} flat=yes&quot; Service ansible webservers -m service -a &quot;name=httpd state=started&quot; ansible webservers -m service -a &quot;name=httpd state=stopped&quot; ansible webservers -m service -a &quot;name=httpd state=restarted&quot; ansible webservers -m service -a &quot;name=httpd enabled=yes&quot; APT # update repositories cache and install package ansible local -m apt -a &quot;name=foo update_cache=yes&quot; # install latest version of package ansible local -m apt -a &quot;name=foo state=latest&quot; # install version &#39;1.00&#39; of package &quot;foo&quot; ansible local -m apt -a &quot;name=foo=1.00 state=present&quot; # remove package ansible local -m apt -a &quot;name=foo state=absent&quot; # equivalent of &quot;apt-get update&quot; ansible local -m apt -a &quot;update_cache=yes&quot; # install local deb file ansible local -m apt -a &quot;deb=/tmp/mypackage.deb&quot; APT repository ansible local -m apt_repository -a &quot;repo=&#39;deb http://archive.canonical.com/ubuntu hardy partner&#39; state=present&quot; ansible local -m apt_repository -a &quot;repo=&#39;deb http://archive.canonical.com/ubuntu hardy partner&#39; state=absent&quot; ansible local -m apt_repository -a &quot;repo=&#39;ppa:nginx/stable&#39;&quot; Shell # execute the command in remote shell ansible webserver -m shell -a &quot;somescript.sh &gt;&gt; somelog.txt&quot; # change the working directory to somedir/ before executing the command.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.17-DEV" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/normalize.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/highlight.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://danielkraic.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="danielkraic">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Gitlab" title="Gitlab" href="danielkraic">
+                                <i class="fa fa-gitlab"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="danielkraic">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="danielkraic">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="danielkraic">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Ansible</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2015-09-16" itemprop="datePublished">Wed, Sep 16, 2015</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author"></a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<p>Ansible is a free software platform for configuring and managing computers. It combines multi-node software deployment, ad hoc task execution, and configuration management. It manages nodes over SSH or PowerShell and requires Python (2.4 or later) to be installed on them. The system uses YAML to express reusable descriptions of systems.</p>
+
+<h3 id="installation">Installation</h3>
+
+<h4 id="install-from-ppa">Install from PPA</h4>
+
+<pre><code class="language-bash">sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install ansible
+</code></pre>
+
+<h4 id="install-with-pip">Install with pip</h4>
+
+<pre><code class="language-bash">sudo pip install ansible
+</code></pre>
+
+<h3 id="configuration">Configuration</h3>
+
+<h4 id="add-localhost-to-hosts-file">Add localhost to hosts file</h4>
+
+<pre><code class="language-bash">echo &quot;localhost ansible_connection=local&quot; &gt; ~/ansible_hosts
+export ANSIBLE_INVENTORY=~/ansible_hosts
+</code></pre>
+
+<h4 id="setup-ssh-agent">Setup SSH-agent</h4>
+
+<pre><code class="language-bash">ssh-agent bash
+ssh-add ~/.ssh/id_rsa
+</code></pre>
+
+<h4 id="inventory-http-docs-ansible-com-ansible-intro-inventory-html"><a href="http://docs.ansible.com/ansible/intro_inventory.html">Inventory</a></h4>
+
+<pre><code>[webservers]
+www[01:50].example.com
+
+[databases]
+db-[a:f].example.com
+
+[targets]
+localhost              ansible_connection=local
+other1.example.com     ansible_connection=ssh        ansible_ssh_user=mpdehaan
+other2.example.com     ansible_connection=ssh        ansible_ssh_user=mdehaan
+</code></pre>
+
+<h3 id="ad-hoc-commands-http-docs-ansible-com-ansible-intro-adhoc-html"><a href="http://docs.ansible.com/ansible/intro_adhoc.html">Ad-Hoc Commands</a></h3>
+
+<h4 id="patterns-http-docs-ansible-com-ansible-intro-patterns-html"><a href="http://docs.ansible.com/ansible/intro_patterns.html">Patterns</a></h4>
+
+<pre><code class="language-bash">ansible &lt;pattern_goes_here&gt; -m &lt;module_name&gt; -a &lt;arguments&gt;
+</code></pre>
+
+<h4 id="ping-hosts">Ping hosts</h4>
+
+<pre><code class="language-bash"># ping
+ansible all -m ping
+# ask ssh password
+ansible all -m ping --ask-pass
+# as bruce
+$ ansible all -m ping -u bruce
+# as bruce, sudoing to root
+$ ansible all -m ping -u bruce --sudo
+# as bruce, sudoing to batman
+$ ansible all -m ping -u bruce --sudo --sudo-user batman
+</code></pre>
+
+<h4 id="run-command">Run command</h4>
+
+<pre><code class="language-bash">ansible localhost -a &quot;/bin/echo hello&quot;
+ansible localhost -a &quot;uname -a&quot;
+ansible localhost -m shell -a 'echo $TERM'
+</code></pre>
+
+<h4 id="run-command-in-parallel">Run command in parallel</h4>
+
+<pre><code class="language-bash">ansible atlanta -a &quot;/sbin/reboot&quot; -f 10
+</code></pre>
+
+<h4 id="run-as-other-user-with-sudo">Run as other user with sudo</h4>
+
+<pre><code class="language-bash">ansible atlanta -a &quot;/usr/bin/foo&quot; -u username --sudo [--ask-sudo-pass]
+</code></pre>
+
+<h4 id="file-http-docs-ansible-com-ansible-file-module-html"><a href="http://docs.ansible.com/ansible/file_module.html">File</a></h4>
+
+<pre><code class="language-bash"># create file and set permissions
+ansible webservers -m file -a &quot;dest=/srv/foo/b.txt mode=600 owner=mdehaan group=mdehaan&quot;
+# create directory
+ansible webservers -m file -a &quot;dest=/path/to/c mode=755 owner=mdehaan group=mdehaan state=directory&quot;
+# delete file
+ansible webservers -m file -a &quot;dest=/path/to/c state=absent&quot;
+</code></pre>
+
+<h4 id="copy-http-docs-ansible-com-ansible-copy-module-html"><a href="http://docs.ansible.com/ansible/copy_module.html">Copy</a></h4>
+
+<pre><code class="language-bash"># copy file
+ansible atlanta -m copy -a &quot;src=/etc/hosts dest=/tmp/hosts&quot;
+ansible atlanta -m copy -a &quot;src=/srv/myfiles/foo.conf dest=/etc/foo.conf owner=foo group=foo mode=0644 backup=yes&quot;
+ansible atlanta -m copy -a &quot;src=/mine/sudoers dest=/etc/sudoers validate='visudo -cf %s'&quot;
+</code></pre>
+
+<h4 id="fetch-http-docs-ansible-com-ansible-fetch-module-html"><a href="http://docs.ansible.com/ansible/fetch_module.html">Fetch</a></h4>
+
+<pre><code class="language-bash"># fetch file from remote node
+ansible atlanta -m fetch -a &quot;src=/tmp/somefile dest=/tmp/fetched&quot;
+ansible atlanta -m fetch -a &quot;src=/tmp/somefile dest=/tmp/prefix-{{ ansible_hostname }} flat=yes&quot;
+</code></pre>
+
+<h4 id="service-http-docs-ansible-com-ansible-service-module-html"><a href="http://docs.ansible.com/ansible/service_module.html">Service</a></h4>
+
+<pre><code class="language-bash">ansible webservers -m service -a &quot;name=httpd state=started&quot;
+ansible webservers -m service -a &quot;name=httpd state=stopped&quot;
+ansible webservers -m service -a &quot;name=httpd state=restarted&quot;
+ansible webservers -m service -a &quot;name=httpd enabled=yes&quot;
+</code></pre>
+
+<h4 id="apt-http-docs-ansible-com-ansible-apt-module-html"><a href="http://docs.ansible.com/ansible/apt_module.html">APT</a></h4>
+
+<pre><code class="language-bash"># update repositories cache and install package
+ansible local -m apt -a &quot;name=foo update_cache=yes&quot;
+# install latest version of package
+ansible local -m apt -a &quot;name=foo state=latest&quot;
+# install version '1.00' of package &quot;foo&quot;
+ansible local -m apt -a &quot;name=foo=1.00 state=present&quot;
+# remove package
+ansible local -m apt -a &quot;name=foo state=absent&quot;
+# equivalent of &quot;apt-get update&quot;
+ansible local -m apt -a &quot;update_cache=yes&quot;
+# install local deb file
+ansible local -m apt -a &quot;deb=/tmp/mypackage.deb&quot;
+</code></pre>
+
+<h4 id="apt-repository-http-docs-ansible-com-ansible-apt-repository-module-html"><a href="http://docs.ansible.com/ansible/apt_repository_module.html">APT repository</a></h4>
+
+<pre><code class="language-bash">ansible local -m apt_repository -a &quot;repo='deb http://archive.canonical.com/ubuntu hardy partner' state=present&quot;
+ansible local -m apt_repository -a &quot;repo='deb http://archive.canonical.com/ubuntu hardy partner' state=absent&quot;
+ansible local -m apt_repository -a &quot;repo='ppa:nginx/stable'&quot;
+</code></pre>
+
+<h4 id="shell-http-docs-ansible-com-ansible-shell-module-html"><a href="http://docs.ansible.com/ansible/shell_module.html">Shell</a></h4>
+
+<pre><code class="language-bash"># execute the command in remote shell
+ansible webserver -m shell -a &quot;somescript.sh &gt;&gt; somelog.txt&quot;
+# change the working directory to somedir/ before executing the command.
+ansible webserver -m shell -a &quot;somescript.sh &gt;&gt; somelog.txt chdir=somedir/&quot;
+</code></pre>
+
+<h4 id="ini-http-docs-ansible-com-ansible-ini-file-module-html"><a href="http://docs.ansible.com/ansible/ini_file_module.html">INI</a></h4>
+
+<pre><code class="language-bash">ansible webserver -m ini_file -a &quot;dest=/etc/conf section=drinks option=fav value=lemonade mode=0600 backup=yes&quot;
+</code></pre>
+
+<h4 id="sysctl-http-docs-ansible-com-ansible-sysctl-module-html"><a href="http://docs.ansible.com/ansible/sysctl_module.html">Sysctl</a></h4>
+
+<pre><code class="language-bash"># set vm.swappiness to 5 in /etc/sysctl.conf
+ansible webserver -m sysctl 'name=vm.swappiness value=5 state=present'
+# remove kernel.panic entry from /etc/sysctl.conf
+ansible webserver -m sysctl 'name=kernel.panic state=absent sysctl_file=/etc/sysctl.conf'
+# set kernel.panic to 3 in /tmp/test_sysctl.conf
+ansible webserver -m sysctl 'name=kernel.panic value=3 sysctl_file=/tmp/test_sysctl.conf reload=no'
+# set ip forwarding on in /proc and do not reload the sysctl file
+ansible webserver -m sysctl 'name=&quot;net.ipv4.ip_forward&quot; value=1 sysctl_set=yes'
+# set ip forwarding on in /proc and in the sysctl file and reload if necessary
+ansible webserver -m sysctl 'name=&quot;net.ipv4.ip_forward&quot; value=1 sysctl_set=yes state=present reload=yes'
+</code></pre>
+
+<h4 id="script-http-docs-ansible-com-ansible-script-module-html-runs-a-local-script-on-a-remote-node-after-transferring-it"><a href="http://docs.ansible.com/ansible/script_module.html">Script</a> - Runs a local script on a remote node after transferring it</h4>
+
+<pre><code class="language-bash">ansible webserver -m script -a &quot;/some/local/script.sh --some-arguments 1234&quot;
+</code></pre>
+
+<h4 id="git-http-docs-ansible-com-ansible-git-module-html"><a href="http://docs.ansible.com/ansible/git_module.html">Git</a></h4>
+
+<pre><code class="language-bash">ansible webservers -m git -a &quot;repo=git://foo.example.org/repo.git dest=/srv/myapp version=HEAD&quot;
+</code></pre>
+
+<h4 id="assemble-http-docs-ansible-com-ansible-assemble-module-html-assembles-a-configuration-file-from-fragments"><a href="http://docs.ansible.com/ansible/assemble_module.html">Assemble</a> - Assembles a configuration file from fragments</h4>
+
+<pre><code class="language-bash">ansible webserver -m assemble -a &quot;src=/etc/someapp/fragments dest=/etc/someapp/someapp.conf&quot;
+# when a delimiter is specified, it will be inserted in between each fragment
+ansible webserver -m assemble -a &quot;src=/etc/someapp/fragments dest=/etc/someapp/someapp.conf delimiter='### START FRAGMENT ###'&quot;
+</code></pre>
+
+<h4 id="lineinfile-http-docs-ansible-com-ansible-lineinfile-module-html"><a href="http://docs.ansible.com/ansible/lineinfile_module.html">LineInFile</a></h4>
+
+<pre><code class="language-bash">ansible webserver -m lineinfile -a 'dest=/etc/sudoers state=absent regexp=&quot;^%wheel&quot;'
+ansible webserver -m lineinfile -a 'dest=/etc/httpd/conf/httpd.conf regexp=&quot;^Listen &quot; insertafter=&quot;^#Listen &quot; line=&quot;Listen 8080&quot;'
+ansible webserver -m lineinfile -a 'dest=/etc/services regexp=&quot;^# port for http&quot; insertbefore=&quot;^www.*80/tcp&quot; line=&quot;# port for http by default&quot;'
+ansible webserver -m lineinfile -a 'dest=/tmp/testfile line=&quot;192.168.1.99 foo.lab.net foo&quot;'
+</code></pre>
+
+<h3 id="playbooks-http-docs-ansible-com-ansible-playbooks-html"><a href="http://docs.ansible.com/ansible/playbooks.html">Playbooks</a></h3>
+
+<h4 id="examples">Examples</h4>
+
+<pre><code class="language-yaml">---
+- hosts: webservers
+  vars:
+    http_port: 80
+    max_clients: 200
+  remote_user: root
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: write the apache config file
+    template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+    notify:
+    - restart apache
+  - name: ensure apache is running (and enable it at boot)
+    service: name=httpd state=started enabled=yes
+  handlers:
+    - name: restart apache
+      service: name=httpd state=restarted
+</code></pre>
+
+<pre><code class="language-yaml">---
+- hosts: webservers
+  vars:
+    http_port: 80
+    max_clients: 200
+  remote_user: root
+  tasks:
+  - name: ensure apache is at the latest version
+    yum:
+      pkg: httpd
+      state: latest
+  - name: write the apache config file
+    template:
+      src: /srv/httpd.j2
+      dest: /etc/httpd.conf
+    notify:
+    - restart apache
+  - name: ensure apache is running
+    service:
+      name: httpd
+      state: started
+  handlers:
+    - name: restart apache
+      service:
+        name: httpd
+        state: restarted
+</code></pre>
+
+<pre><code class="language-yaml">---
+- hosts: webservers
+  remote_user: root
+
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: write the apache config file
+    template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+
+- hosts: databases
+  remote_user: root
+
+  tasks:
+  - name: ensure postgresql is at the latest version
+    yum: name=postgresql state=latest
+  - name: ensure that postgresql is started
+    service: name=postgresql state=running
+</code></pre>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="https://danielkraic.github.io/tags/dev/">dev</a>
+            
+                 <a href="https://danielkraic.github.io/tags/ansible/">ansible</a>
+            
+                 <a href="https://danielkraic.github.io/tags/devops/">devops</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="https://twitter.com/share?text=Ansible&url=https%3a%2f%2fdanielkraic.github.io%2f2015%2f09%2f16%2fansible%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanielkraic.github.io%2f2015%2f09%2f16%2fansible%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2fdanielkraic.github.io%2f2015%2f09%2f16%2fansible%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://danielkraic.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+        <script src="https://danielkraic.github.io/js/jquery.fitvids.js"></script>
+        <script src="https://danielkraic.github.io/js/scripts.js"></script>
+    </body>
+</html>
+

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://danielkraic.github.io/</loc>
+    <lastmod>2016-09-13T13:46:10+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2016/09/13/mongodb/</loc>
+    <lastmod>2016-09-13T13:46:10+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2016/08/29/git/</loc>
+    <lastmod>2016-08-29T15:25:28+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2016/07/27/sed/</loc>
+    <lastmod>2016-07-27T20:22:23+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2016/05/27/cpp-variant/</loc>
+    <lastmod>2016-05-27T10:34:00+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2016/05/27/boost-di/</loc>
+    <lastmod>2016-05-27T10:33:23+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2016/05/24/gdb/</loc>
+    <lastmod>2016-05-24T10:30:00+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2016/01/25/selinux/</loc>
+    <lastmod>2016-01-25T20:24:11+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2016/01/19/awk/</loc>
+    <lastmod>2016-01-19T22:43:51+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/11/18/terminator/</loc>
+    <lastmod>2015-11-18T08:58:16+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/11/12/grep/</loc>
+    <lastmod>2015-11-12T19:41:10+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/10/30/dnf/</loc>
+    <lastmod>2015-10-30T18:08:13+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/10/26/vagrant/</loc>
+    <lastmod>2015-10-26T19:02:41+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/10/19/docker/</loc>
+    <lastmod>2015-10-19T22:50:24+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/09/30/qt-creator/</loc>
+    <lastmod>2015-09-30T19:11:33+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/09/24/screen/</loc>
+    <lastmod>2015-09-24T16:32:52+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/09/24/cpp-random-engine/</loc>
+    <lastmod>2015-09-24T10:33:23+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/09/24/cmake/</loc>
+    <lastmod>2015-09-24T09:10:10+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/09/16/ansible/</loc>
+    <lastmod>2015-09-16T20:54:52+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/09/14/golang-installation-with-gvm/</loc>
+    <lastmod>2015-09-14T20:06:13+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danielkraic.github.io/2015/09/14/build-blog-with-hugo/</loc>
+    <lastmod>2015-09-14T19:54:07+02:00</lastmod>
+  </url>
+  
+</urlset>

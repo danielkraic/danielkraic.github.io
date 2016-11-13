@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ansible on Linux blog</title>
+    <link>https://danielkraic.github.io/tags/ansible/</link>
+    <description>Recent content in Ansible on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 16 Sep 2015 20:54:52 +0200</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/tags/ansible/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Ansible</title>
+      <link>https://danielkraic.github.io/2015/09/16/ansible/</link>
+      <pubDate>Wed, 16 Sep 2015 20:54:52 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/16/ansible/</guid>
+      <description>
+
+&lt;p&gt;Ansible is a free software platform for configuring and managing computers. It combines multi-node software deployment, ad hoc task execution, and configuration management. It manages nodes over SSH or PowerShell and requires Python (2.4 or later) to be installed on them. The system uses YAML to express reusable descriptions of systems.&lt;/p&gt;
+
+&lt;h3 id=&#34;installation&#34;&gt;Installation&lt;/h3&gt;
+
+&lt;h4 id=&#34;install-from-ppa&#34;&gt;Install from PPA&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install ansible
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;install-with-pip&#34;&gt;Install with pip&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo pip install ansible
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;configuration&#34;&gt;Configuration&lt;/h3&gt;
+
+&lt;h4 id=&#34;add-localhost-to-hosts-file&#34;&gt;Add localhost to hosts file&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;echo &amp;quot;localhost ansible_connection=local&amp;quot; &amp;gt; ~/ansible_hosts
+export ANSIBLE_INVENTORY=~/ansible_hosts
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;setup-ssh-agent&#34;&gt;Setup SSH-agent&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ssh-agent bash
+ssh-add ~/.ssh/id_rsa
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;inventory-http-docs-ansible-com-ansible-intro-inventory-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/intro_inventory.html&#34;&gt;Inventory&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;[webservers]
+www[01:50].example.com
+
+[databases]
+db-[a:f].example.com
+
+[targets]
+localhost              ansible_connection=local
+other1.example.com     ansible_connection=ssh        ansible_ssh_user=mpdehaan
+other2.example.com     ansible_connection=ssh        ansible_ssh_user=mdehaan
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;ad-hoc-commands-http-docs-ansible-com-ansible-intro-adhoc-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/intro_adhoc.html&#34;&gt;Ad-Hoc Commands&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h4 id=&#34;patterns-http-docs-ansible-com-ansible-intro-patterns-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/intro_patterns.html&#34;&gt;Patterns&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible &amp;lt;pattern_goes_here&amp;gt; -m &amp;lt;module_name&amp;gt; -a &amp;lt;arguments&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ping-hosts&#34;&gt;Ping hosts&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# ping
+ansible all -m ping
+# ask ssh password
+ansible all -m ping --ask-pass
+# as bruce
+$ ansible all -m ping -u bruce
+# as bruce, sudoing to root
+$ ansible all -m ping -u bruce --sudo
+# as bruce, sudoing to batman
+$ ansible all -m ping -u bruce --sudo --sudo-user batman
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;run-command&#34;&gt;Run command&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible localhost -a &amp;quot;/bin/echo hello&amp;quot;
+ansible localhost -a &amp;quot;uname -a&amp;quot;
+ansible localhost -m shell -a &#39;echo $TERM&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;run-command-in-parallel&#34;&gt;Run command in parallel&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible atlanta -a &amp;quot;/sbin/reboot&amp;quot; -f 10
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;run-as-other-user-with-sudo&#34;&gt;Run as other user with sudo&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible atlanta -a &amp;quot;/usr/bin/foo&amp;quot; -u username --sudo [--ask-sudo-pass]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;file-http-docs-ansible-com-ansible-file-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/file_module.html&#34;&gt;File&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# create file and set permissions
+ansible webservers -m file -a &amp;quot;dest=/srv/foo/b.txt mode=600 owner=mdehaan group=mdehaan&amp;quot;
+# create directory
+ansible webservers -m file -a &amp;quot;dest=/path/to/c mode=755 owner=mdehaan group=mdehaan state=directory&amp;quot;
+# delete file
+ansible webservers -m file -a &amp;quot;dest=/path/to/c state=absent&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;copy-http-docs-ansible-com-ansible-copy-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/copy_module.html&#34;&gt;Copy&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# copy file
+ansible atlanta -m copy -a &amp;quot;src=/etc/hosts dest=/tmp/hosts&amp;quot;
+ansible atlanta -m copy -a &amp;quot;src=/srv/myfiles/foo.conf dest=/etc/foo.conf owner=foo group=foo mode=0644 backup=yes&amp;quot;
+ansible atlanta -m copy -a &amp;quot;src=/mine/sudoers dest=/etc/sudoers validate=&#39;visudo -cf %s&#39;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;fetch-http-docs-ansible-com-ansible-fetch-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/fetch_module.html&#34;&gt;Fetch&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# fetch file from remote node
+ansible atlanta -m fetch -a &amp;quot;src=/tmp/somefile dest=/tmp/fetched&amp;quot;
+ansible atlanta -m fetch -a &amp;quot;src=/tmp/somefile dest=/tmp/prefix-{{ ansible_hostname }} flat=yes&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;service-http-docs-ansible-com-ansible-service-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/service_module.html&#34;&gt;Service&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webservers -m service -a &amp;quot;name=httpd state=started&amp;quot;
+ansible webservers -m service -a &amp;quot;name=httpd state=stopped&amp;quot;
+ansible webservers -m service -a &amp;quot;name=httpd state=restarted&amp;quot;
+ansible webservers -m service -a &amp;quot;name=httpd enabled=yes&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;apt-http-docs-ansible-com-ansible-apt-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/apt_module.html&#34;&gt;APT&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# update repositories cache and install package
+ansible local -m apt -a &amp;quot;name=foo update_cache=yes&amp;quot;
+# install latest version of package
+ansible local -m apt -a &amp;quot;name=foo state=latest&amp;quot;
+# install version &#39;1.00&#39; of package &amp;quot;foo&amp;quot;
+ansible local -m apt -a &amp;quot;name=foo=1.00 state=present&amp;quot;
+# remove package
+ansible local -m apt -a &amp;quot;name=foo state=absent&amp;quot;
+# equivalent of &amp;quot;apt-get update&amp;quot;
+ansible local -m apt -a &amp;quot;update_cache=yes&amp;quot;
+# install local deb file
+ansible local -m apt -a &amp;quot;deb=/tmp/mypackage.deb&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;apt-repository-http-docs-ansible-com-ansible-apt-repository-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/apt_repository_module.html&#34;&gt;APT repository&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible local -m apt_repository -a &amp;quot;repo=&#39;deb http://archive.canonical.com/ubuntu hardy partner&#39; state=present&amp;quot;
+ansible local -m apt_repository -a &amp;quot;repo=&#39;deb http://archive.canonical.com/ubuntu hardy partner&#39; state=absent&amp;quot;
+ansible local -m apt_repository -a &amp;quot;repo=&#39;ppa:nginx/stable&#39;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;shell-http-docs-ansible-com-ansible-shell-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/shell_module.html&#34;&gt;Shell&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# execute the command in remote shell
+ansible webserver -m shell -a &amp;quot;somescript.sh &amp;gt;&amp;gt; somelog.txt&amp;quot;
+# change the working directory to somedir/ before executing the command.
+ansible webserver -m shell -a &amp;quot;somescript.sh &amp;gt;&amp;gt; somelog.txt chdir=somedir/&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ini-http-docs-ansible-com-ansible-ini-file-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/ini_file_module.html&#34;&gt;INI&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webserver -m ini_file -a &amp;quot;dest=/etc/conf section=drinks option=fav value=lemonade mode=0600 backup=yes&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;sysctl-http-docs-ansible-com-ansible-sysctl-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/sysctl_module.html&#34;&gt;Sysctl&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# set vm.swappiness to 5 in /etc/sysctl.conf
+ansible webserver -m sysctl &#39;name=vm.swappiness value=5 state=present&#39;
+# remove kernel.panic entry from /etc/sysctl.conf
+ansible webserver -m sysctl &#39;name=kernel.panic state=absent sysctl_file=/etc/sysctl.conf&#39;
+# set kernel.panic to 3 in /tmp/test_sysctl.conf
+ansible webserver -m sysctl &#39;name=kernel.panic value=3 sysctl_file=/tmp/test_sysctl.conf reload=no&#39;
+# set ip forwarding on in /proc and do not reload the sysctl file
+ansible webserver -m sysctl &#39;name=&amp;quot;net.ipv4.ip_forward&amp;quot; value=1 sysctl_set=yes&#39;
+# set ip forwarding on in /proc and in the sysctl file and reload if necessary
+ansible webserver -m sysctl &#39;name=&amp;quot;net.ipv4.ip_forward&amp;quot; value=1 sysctl_set=yes state=present reload=yes&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;script-http-docs-ansible-com-ansible-script-module-html-runs-a-local-script-on-a-remote-node-after-transferring-it&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/script_module.html&#34;&gt;Script&lt;/a&gt; - Runs a local script on a remote node after transferring it&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webserver -m script -a &amp;quot;/some/local/script.sh --some-arguments 1234&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;git-http-docs-ansible-com-ansible-git-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/git_module.html&#34;&gt;Git&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webservers -m git -a &amp;quot;repo=git://foo.example.org/repo.git dest=/srv/myapp version=HEAD&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;assemble-http-docs-ansible-com-ansible-assemble-module-html-assembles-a-configuration-file-from-fragments&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/assemble_module.html&#34;&gt;Assemble&lt;/a&gt; - Assembles a configuration file from fragments&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webserver -m assemble -a &amp;quot;src=/etc/someapp/fragments dest=/etc/someapp/someapp.conf&amp;quot;
+# when a delimiter is specified, it will be inserted in between each fragment
+ansible webserver -m assemble -a &amp;quot;src=/etc/someapp/fragments dest=/etc/someapp/someapp.conf delimiter=&#39;### START FRAGMENT ###&#39;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;lineinfile-http-docs-ansible-com-ansible-lineinfile-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/lineinfile_module.html&#34;&gt;LineInFile&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webserver -m lineinfile -a &#39;dest=/etc/sudoers state=absent regexp=&amp;quot;^%wheel&amp;quot;&#39;
+ansible webserver -m lineinfile -a &#39;dest=/etc/httpd/conf/httpd.conf regexp=&amp;quot;^Listen &amp;quot; insertafter=&amp;quot;^#Listen &amp;quot; line=&amp;quot;Listen 8080&amp;quot;&#39;
+ansible webserver -m lineinfile -a &#39;dest=/etc/services regexp=&amp;quot;^# port for http&amp;quot; insertbefore=&amp;quot;^www.*80/tcp&amp;quot; line=&amp;quot;# port for http by default&amp;quot;&#39;
+ansible webserver -m lineinfile -a &#39;dest=/tmp/testfile line=&amp;quot;192.168.1.99 foo.lab.net foo&amp;quot;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;playbooks-http-docs-ansible-com-ansible-playbooks-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/playbooks.html&#34;&gt;Playbooks&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h4 id=&#34;examples&#34;&gt;Examples&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;---
+- hosts: webservers
+  vars:
+    http_port: 80
+    max_clients: 200
+  remote_user: root
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: write the apache config file
+    template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+    notify:
+    - restart apache
+  - name: ensure apache is running (and enable it at boot)
+    service: name=httpd state=started enabled=yes
+  handlers:
+    - name: restart apache
+      service: name=httpd state=restarted
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;---
+- hosts: webservers
+  vars:
+    http_port: 80
+    max_clients: 200
+  remote_user: root
+  tasks:
+  - name: ensure apache is at the latest version
+    yum:
+      pkg: httpd
+      state: latest
+  - name: write the apache config file
+    template:
+      src: /srv/httpd.j2
+      dest: /etc/httpd.conf
+    notify:
+    - restart apache
+  - name: ensure apache is running
+    service:
+      name: httpd
+      state: started
+  handlers:
+    - name: restart apache
+      service:
+        name: httpd
+        state: restarted
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;---
+- hosts: webservers
+  remote_user: root
+
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: write the apache config file
+    template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+
+- hosts: databases
+  remote_user: root
+
+  tasks:
+  - name: ensure postgresql is at the latest version
+    yum: name=postgresql state=latest
+  - name: ensure that postgresql is started
+    service: name=postgresql state=running
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>CMake &middot; </title>
+        <meta name="description" content="CMake is tool for managing software build process using a compiler-independent method. It is designed to support directory hierarchies and applications that depend on multiple libraries. cmake -DCMAKE_BUILD_TYPE=Debug .. export CC=/usr/bin/clang export CXX=/usr/bin/clang&#43;&#43; cmake .. cmake -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang&#43;&#43; .. Example cmake_minimum_required(VERSION 2.6) enable_language(CXX) project(project-name) # setting build output directory set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin) set(CMAKE_CXX_COMPILER &quot;g&#43;&#43;-4.8&quot;) set(CMAKE_CXX_FLAGS &quot;${CMAKE_CXX_FLAGS} -O2 -Wall -Werror -Weffc&#43;&#43; -fopenmp -std=c&#43;&#43;11&quot;) include_directories(&quot;/usr/include/customlib&quot;) FILE(GLOB WEB_BENCHMARK_SRCS *.cpp) add_executable(bin-name ${PROJECT_SRCS}) include_directories(${CMAKE_SOURCE_DIR}) target_link_libraries(myapp test) include(CheckCXXCompilerFlag) CHECK_CXX_COMPILER_FLAG(&quot;-std=c&#43;&#43;11&quot; COMPILER_SUPPORTS_CXX11) CHECK_CXX_COMPILER_FLAG(&quot;-std=c&#43;&#43;0x&quot; COMPILER_SUPPORTS_CXX0X) if(COMPILER_SUPPORTS_CXX11) set(CMAKE_CXX_FLAGS &quot;${CMAKE_CXX_FLAGS} -std=c&#43;&#43;11&quot;) elseif(COMPILER_SUPPORTS_CXX0X) set(CMAKE_CXX_FLAGS &quot;${CMAKE_CXX_FLAGS} -std=c&#43;&#43;0x&quot;) else() message(STATUS &quot;The compiler ${CMAKE_CXX_COMPILER} has no C&#43;&#43;11 support.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.17-DEV" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/normalize.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/highlight.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://danielkraic.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="danielkraic">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Gitlab" title="Gitlab" href="danielkraic">
+                                <i class="fa fa-gitlab"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="danielkraic">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="danielkraic">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="danielkraic">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">CMake</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2015-09-24" itemprop="datePublished">Thu, Sep 24, 2015</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author"></a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<p>CMake is tool for managing software build process using a compiler-independent method. It is designed to support directory hierarchies and applications that depend on multiple libraries.</p>
+
+<pre><code class="language-bash">cmake -DCMAKE_BUILD_TYPE=Debug ..
+</code></pre>
+
+<pre><code class="language-bash">export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+cmake ..
+</code></pre>
+
+<pre><code class="language-bash">cmake -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++ ..
+</code></pre>
+
+<h3 id="example">Example</h3>
+
+<pre><code class="language-cmake">cmake_minimum_required(VERSION 2.6)
+enable_language(CXX)
+project(project-name)
+
+# setting build output directory
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+
+set(CMAKE_CXX_COMPILER &quot;g++-4.8&quot;)
+set(CMAKE_CXX_FLAGS &quot;${CMAKE_CXX_FLAGS} -O2 -Wall -Werror -Weffc++ -fopenmp -std=c++11&quot;)
+
+include_directories(&quot;/usr/include/customlib&quot;)
+
+FILE(GLOB WEB_BENCHMARK_SRCS *.cpp)
+add_executable(bin-name ${PROJECT_SRCS})
+include_directories(${CMAKE_SOURCE_DIR})
+
+target_link_libraries(myapp test)
+
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG(&quot;-std=c++11&quot; COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG(&quot;-std=c++0x&quot; COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS &quot;${CMAKE_CXX_FLAGS} -std=c++11&quot;)
+elseif(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS &quot;${CMAKE_CXX_FLAGS} -std=c++0x&quot;)
+else()
+        message(STATUS &quot;The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.&quot;)
+endif()
+</code></pre>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="https://danielkraic.github.io/tags/dev/">dev</a>
+            
+                 <a href="https://danielkraic.github.io/tags/cpp/">cpp</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="https://twitter.com/share?text=CMake&url=https%3a%2f%2fdanielkraic.github.io%2f2015%2f09%2f24%2fcmake%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanielkraic.github.io%2f2015%2f09%2f24%2fcmake%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2fdanielkraic.github.io%2f2015%2f09%2f24%2fcmake%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://danielkraic.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+        <script src="https://danielkraic.github.io/js/jquery.fitvids.js"></script>
+        <script src="https://danielkraic.github.io/js/scripts.js"></script>
+    </body>
+</html>
+

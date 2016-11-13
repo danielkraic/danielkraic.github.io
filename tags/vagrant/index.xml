@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vagrant on Linux blog</title>
+    <link>https://danielkraic.github.io/tags/vagrant/</link>
+    <description>Recent content in Vagrant on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 26 Oct 2015 19:02:41 +0100</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/tags/vagrant/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Vagrant</title>
+      <link>https://danielkraic.github.io/2015/10/26/vagrant/</link>
+      <pubDate>Mon, 26 Oct 2015 19:02:41 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/10/26/vagrant/</guid>
+      <description>
+
+&lt;h2 id=&#34;vagrant&#34;&gt;Vagrant&lt;/h2&gt;
+
+&lt;h3 id=&#34;search-boxes&#34;&gt;Search boxes&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://atlas.hashicorp.com/boxes/search&#34;&gt;atlas.hashicorp.com/boxes/search&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;up-and-running&#34;&gt;Up and running&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir my-project &amp;amp;&amp;amp; cd my-project
+vagrant init hashicorp/precise32
+vagrant up
+vagrant ssh
+vagrant destroy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;commands&#34;&gt;Commands&lt;/h3&gt;
+
+&lt;h4 id=&#34;init&#34;&gt;Init&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# initialize Vagrant environment
+vagrant init [box-name] [box-url]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;up&#34;&gt;Up&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# create and configure guest machines
+vagrant up
+# specify provider (default is virtualbox)
+vagrant up --provider virtualbox
+# force provisioners to run
+vagrant up --provision
+# only run given provisioners
+vagrant up --provision-with shell,chef
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ssh&#34;&gt;SSH&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# SSH into running machine
+vagrant ssh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ssh-config&#34;&gt;SSH config&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# output valid ssh configuration to SSH into machine
+vagrant ssh-config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;status&#34;&gt;Status&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# print machine state
+vagrant status
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;global-status&#34;&gt;Global status&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# state of all active Vagrant environments
+vagrant global-status
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;halt&#34;&gt;Halt&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# shut down running machine
+vagrant halt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;reload&#34;&gt;Reload&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# equivalent of running halt followed by up
+vagrant reload
+# force provisioners to re-run, provisioners will not run again by default
+vagrant reload --provision
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;resume&#34;&gt;Resume&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# resume machine that was previously suspended
+vagrant resume
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;suspend&#34;&gt;Suspend&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# suspends machine (to resume it later)
+vagrant suspend
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;destroy&#34;&gt;Destroy&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# stop machine and destroy all its resources
+vagrant -f destroy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;version&#34;&gt;Version&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# output vagrant version
+vagrant version
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;provision&#34;&gt;Provision&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# run any configured provisioners
+vagrant provision
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;package&#34;&gt;Package&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# packages currently running VirtualBox environment into a re-usable box
+vagrant package
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;box&#34;&gt;Box&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;vagrant box list
+vagrant box add hashicorp/precise32
+vagrant box remove hashicorp/precise32
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;plugin&#34;&gt;Plugin&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;vagrant plugin install &amp;lt;name&amp;gt;
+vagrant plugin list
+vagrant plugin uninstall &amp;lt;name&amp;gt;
+vagrant plugin update &amp;lt;name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+  # rsyslog server with RELP enabled
+  config.vm.define :server do |server|
+    server.vm.box = &amp;quot;ubuntu/trusty64&amp;quot;
+
+    server.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 514, host: 10514
+    server.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 20514, host: 20514
+    server.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 20515, host: 20515
+
+    server.vm.provider &amp;quot;virtualbox&amp;quot; do |vb|
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usb&amp;quot;, &amp;quot;off&amp;quot;]
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usbehci&amp;quot;, &amp;quot;off&amp;quot;]
+    end
+
+    server.vm.provision :ansible do |ansible|
+      ansible.playbook = &amp;quot;ansible/setup-server.yml&amp;quot;
+      ansible.host_key_checking = false
+      ansible.verbose = &amp;quot;v&amp;quot;
+    end
+  end
+
+  # rsyslog client with RELP enabled
+  config.vm.define :client do |client|
+    client.vm.box = &amp;quot;ubuntu/trusty64&amp;quot;
+
+    client.vm.provider &amp;quot;virtualbox&amp;quot; do |vb|
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usb&amp;quot;, &amp;quot;off&amp;quot;]
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usbehci&amp;quot;, &amp;quot;off&amp;quot;]
+    end
+
+    client.vm.provision :ansible do |ansible|
+      ansible.playbook = &amp;quot;ansible/setup-client.yml&amp;quot;
+      ansible.host_key_checking = false
+      ansible.verbose = &amp;quot;v&amp;quot;
+    end
+  end
+e
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

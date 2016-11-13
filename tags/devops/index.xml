@@ -1,0 +1,855 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Devops on Linux blog</title>
+    <link>https://danielkraic.github.io/tags/devops/</link>
+    <description>Recent content in Devops on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 26 Oct 2015 19:02:41 +0100</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Vagrant</title>
+      <link>https://danielkraic.github.io/2015/10/26/vagrant/</link>
+      <pubDate>Mon, 26 Oct 2015 19:02:41 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/10/26/vagrant/</guid>
+      <description>
+
+&lt;h2 id=&#34;vagrant&#34;&gt;Vagrant&lt;/h2&gt;
+
+&lt;h3 id=&#34;search-boxes&#34;&gt;Search boxes&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://atlas.hashicorp.com/boxes/search&#34;&gt;atlas.hashicorp.com/boxes/search&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;up-and-running&#34;&gt;Up and running&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir my-project &amp;amp;&amp;amp; cd my-project
+vagrant init hashicorp/precise32
+vagrant up
+vagrant ssh
+vagrant destroy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;commands&#34;&gt;Commands&lt;/h3&gt;
+
+&lt;h4 id=&#34;init&#34;&gt;Init&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# initialize Vagrant environment
+vagrant init [box-name] [box-url]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;up&#34;&gt;Up&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# create and configure guest machines
+vagrant up
+# specify provider (default is virtualbox)
+vagrant up --provider virtualbox
+# force provisioners to run
+vagrant up --provision
+# only run given provisioners
+vagrant up --provision-with shell,chef
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ssh&#34;&gt;SSH&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# SSH into running machine
+vagrant ssh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ssh-config&#34;&gt;SSH config&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# output valid ssh configuration to SSH into machine
+vagrant ssh-config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;status&#34;&gt;Status&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# print machine state
+vagrant status
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;global-status&#34;&gt;Global status&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# state of all active Vagrant environments
+vagrant global-status
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;halt&#34;&gt;Halt&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# shut down running machine
+vagrant halt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;reload&#34;&gt;Reload&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# equivalent of running halt followed by up
+vagrant reload
+# force provisioners to re-run, provisioners will not run again by default
+vagrant reload --provision
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;resume&#34;&gt;Resume&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# resume machine that was previously suspended
+vagrant resume
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;suspend&#34;&gt;Suspend&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# suspends machine (to resume it later)
+vagrant suspend
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;destroy&#34;&gt;Destroy&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# stop machine and destroy all its resources
+vagrant -f destroy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;version&#34;&gt;Version&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# output vagrant version
+vagrant version
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;provision&#34;&gt;Provision&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# run any configured provisioners
+vagrant provision
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;package&#34;&gt;Package&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# packages currently running VirtualBox environment into a re-usable box
+vagrant package
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;box&#34;&gt;Box&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;vagrant box list
+vagrant box add hashicorp/precise32
+vagrant box remove hashicorp/precise32
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;plugin&#34;&gt;Plugin&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;vagrant plugin install &amp;lt;name&amp;gt;
+vagrant plugin list
+vagrant plugin uninstall &amp;lt;name&amp;gt;
+vagrant plugin update &amp;lt;name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+  # rsyslog server with RELP enabled
+  config.vm.define :server do |server|
+    server.vm.box = &amp;quot;ubuntu/trusty64&amp;quot;
+
+    server.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 514, host: 10514
+    server.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 20514, host: 20514
+    server.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 20515, host: 20515
+
+    server.vm.provider &amp;quot;virtualbox&amp;quot; do |vb|
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usb&amp;quot;, &amp;quot;off&amp;quot;]
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usbehci&amp;quot;, &amp;quot;off&amp;quot;]
+    end
+
+    server.vm.provision :ansible do |ansible|
+      ansible.playbook = &amp;quot;ansible/setup-server.yml&amp;quot;
+      ansible.host_key_checking = false
+      ansible.verbose = &amp;quot;v&amp;quot;
+    end
+  end
+
+  # rsyslog client with RELP enabled
+  config.vm.define :client do |client|
+    client.vm.box = &amp;quot;ubuntu/trusty64&amp;quot;
+
+    client.vm.provider &amp;quot;virtualbox&amp;quot; do |vb|
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usb&amp;quot;, &amp;quot;off&amp;quot;]
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usbehci&amp;quot;, &amp;quot;off&amp;quot;]
+    end
+
+    client.vm.provision :ansible do |ansible|
+      ansible.playbook = &amp;quot;ansible/setup-client.yml&amp;quot;
+      ansible.host_key_checking = false
+      ansible.verbose = &amp;quot;v&amp;quot;
+    end
+  end
+e
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Docker</title>
+      <link>https://danielkraic.github.io/2015/10/19/docker/</link>
+      <pubDate>Mon, 19 Oct 2015 22:50:24 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/10/19/docker/</guid>
+      <description>
+
+&lt;h2 id=&#34;docker&#34;&gt;Docker&lt;/h2&gt;
+
+&lt;h3 id=&#34;about&#34;&gt;About&lt;/h3&gt;
+
+&lt;p&gt;Docker allows you to package an application with all of its dependencies into a standardized unit for software development.&lt;/p&gt;
+
+&lt;p&gt;Docker containers wrap up a piece of software in a complete filesystem that contains everything it needs to run: code, runtime, system tools, system libraries – anything you can install on a server. This guarantees that it will always run the same, regardless of the environment it is running in.&lt;/p&gt;
+
+&lt;h5 id=&#34;docker-is-lightweight&#34;&gt;Docker is lightweight&lt;/h5&gt;
+
+&lt;p&gt;Containers running on a single machine all share the same operating system kernel so they start instantly and make more efficient use of RAM. Images are constructed from layered filesystems so they can share common files, making disk usage and image downloads much more efficient.&lt;/p&gt;
+
+&lt;h5 id=&#34;docker-is-secure&#34;&gt;Docker is secure&lt;/h5&gt;
+
+&lt;p&gt;Containers isolate applications from each other and the underlying infrastructure while providing an added layer of protection for the application.&lt;/p&gt;
+
+&lt;h4 id=&#34;docker-vs-vm&#34;&gt;Docker vs VM&lt;/h4&gt;
+
+&lt;p&gt;How is this different from virtual machines?
+Containers have similar resource isolation and allocation benefits as virtual machines but a different architectural approach allows them to be much more portable and efficient.&lt;/p&gt;
+
+&lt;h5 id=&#34;virtual-machines&#34;&gt;Virtual Machines&lt;/h5&gt;
+
+&lt;p&gt;Each virtual machine includes the application, the necessary binaries and libraries and an entire guest operating system - all of which may be tens of GBs in size.&lt;/p&gt;
+
+&lt;h5 id=&#34;containers&#34;&gt;Containers&lt;/h5&gt;
+
+&lt;p&gt;Containers include the application and all of its dependencies, but share the kernel with other containers. They run as an isolated process in userspace on the host operating system. Docker uses resource isolation features of the Linux kernel such as cgroups and kernel namespaces to allow independent &amp;ldquo;containers&amp;rdquo; to run within a single Linux instance, avoiding the overhead of starting and maintaining virtual machines. They’re also not tied to any specific infrastructure – Docker containers run on any computer, on any infrastructure and in any cloud.&lt;/p&gt;
+
+&lt;h3 id=&#34;build-ship-run&#34;&gt;Build -&amp;gt; ship -&amp;gt; run&lt;/h3&gt;
+
+&lt;p&gt;Build – build docker container application and all of its dependencies
+Ship – push container to public/private docker repository
+Run – pull container from repository a run it&lt;/p&gt;
+
+&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+
+&lt;h4 id=&#34;create&#34;&gt;Create&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker create -i -t --name my_fedora fedora:22 bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;-i  Interactive mode (keeps the STDIN open for interaction with the container)&lt;/li&gt;
+&lt;li&gt;-t  Allocates a pseudo-TTY&lt;/li&gt;
+&lt;li&gt;&amp;ndash;name  Name of the container. If not specified, docker will add a hash string as a name.&lt;/li&gt;
+&lt;li&gt;fedora:22  Image to be instantiated.&lt;/li&gt;
+&lt;li&gt;bash  The command (process) to be run inside the container.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker start -a -i my_fedora
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;-a  Attach to the pseudo-TTY&lt;/li&gt;
+&lt;li&gt;-i  Interactive mode (keeps the STDIN open for interaction with the container)&lt;/li&gt;
+&lt;li&gt;&amp;ndash;name  Name of the container.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;create-start-run&#34;&gt;Create + Start = Run&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run hello-world
+docker run docker/whalesay cowsay &#39;hello form docker&#39;
+docker run maryatdocker/docker-whale
+# Interactive
+docker run -i -t --name my_fedora fedora:22 /bin/bash
+# Deamon
+docker run -d --name MySQL mysql:5.7 /opt/mysql/mysqld
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;expose-ports&#34;&gt;Expose ports&lt;/h4&gt;
+
+&lt;p&gt;To expose a specific port use the -p switch. The port 80 inside the container is mapped to the outside as 8080.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run -d -p 8080:80 --name web nginx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To prevent conflicts between multiple containers, the -P switch tells docker to map ports inside containers to random ports outside the container.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run -d -P --name web nginx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;attach-data&#34;&gt;Attach data&lt;/h4&gt;
+
+&lt;p&gt;Exposing /var/www as /usr/share/nginx/html inside the container, which is where nginx stores static content in default setting.
+:ro  Read only permission&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run --name web -p 80:80 -d -v /var/www:/usr/share/nginx/html:ro nginx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;control-containers&#34;&gt;Control containers&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker ps
+docker ps -a
+docker ps -a --filter &#39;exited=0&#39;
+docker stop my_fedora
+docker kill my_fedora
+docker rm my_fedora
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;control-images&#34;&gt;Control images&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# default repository: hub.docker.com
+docker search nginx
+docker pull nginx
+docker pull debian:squeeze
+docker pull 172.16.0.1/username/image_name[:tag]
+docker images
+docker rmi -f nginx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;nginx-static-website&#34;&gt;Nginx static website&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;echo &#39;hello from docker&#39; &amp;gt; index.html
+docker run --name bal-nginx -p 8080:80 -v `pwd`:/usr/share/nginx/html:ro -d nginx
+docker run --name web -p 80:80 -d -v /var/www:/usr/share/nginx/html:ro,Z nginx
+lynx http://localhost:8080
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;inspect-containers&#34;&gt;Inspect containers&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker inspect CONTAINER|IMAGE
+docker inspect CONTAINER | grep IPAddress
+docker logs CONTAINER
+docker top my_fedora
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;env&#34;&gt;ENV&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run -i -t -e VAR1=val1 -e VAR2=val2 fedora:22 bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;foreman-demo&#34;&gt;Foreman Demo&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run -p 3333:3000 -i -t lzap/fedora-foreman-git-stable:1.3.1
+# http://localhost:3333 (admin/changeme)
+docker run -p 3333:3000 -i -t -entrypoint=&#39;/bin/bash&#39; lzap/fedora-foreman-git-stable:1.3.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;link-containers&#34;&gt;Link containers&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run --name DB -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=admin -d mysql:5.7
+docker run -p 8080:80 -e WORDPRESS_DB_PASSWORD=admin -d --name WP --link DB:mysql wordpress
+http://localhost:8080
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;docker-compose&#34;&gt;Docker Compose&lt;/h4&gt;
+
+&lt;p&gt;Tool for defining and running multi-container applications with Docker:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;define Dockerfile&lt;/li&gt;
+&lt;li&gt;define services that make up your app in docker-compose.yml&lt;/li&gt;
+&lt;li&gt;run docker-compose up&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;cheatsheet&#34;&gt;Cheatsheet&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/wsargent/docker-cheat-sheet&#34;&gt;https://github.com/wsargent/docker-cheat-sheet&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
+
+&lt;h3 id=&#34;containers-1&#34;&gt;Containers&lt;/h3&gt;
+
+&lt;h4 id=&#34;lifecycle&#34;&gt;Lifecycle&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;docker create&lt;/td&gt;
+&lt;td&gt;creates a container but does not start it&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker run&lt;/td&gt;
+&lt;td&gt;creates and starts a container in one operation&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker stop&lt;/td&gt;
+&lt;td&gt;stops it&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker start&lt;/td&gt;
+&lt;td&gt;will start it again&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker restart&lt;/td&gt;
+&lt;td&gt;restarts a container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker rm&lt;/td&gt;
+&lt;td&gt;deletes a container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker kill&lt;/td&gt;
+&lt;td&gt;sends a SIGKILL to a container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker attach&lt;/td&gt;
+&lt;td&gt;will connect to a running container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker wait&lt;/td&gt;
+&lt;td&gt;blocks until container stops&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;info&#34;&gt;Info&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;docker ps&lt;/td&gt;
+&lt;td&gt;shows running containers&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker logs&lt;/td&gt;
+&lt;td&gt;gets logs from container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker inspect&lt;/td&gt;
+&lt;td&gt;looks at all the info on a container (including IP address)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker events&lt;/td&gt;
+&lt;td&gt;gets events from container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker port&lt;/td&gt;
+&lt;td&gt;shows public facing port of container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker top&lt;/td&gt;
+&lt;td&gt;shows running processes in container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker stats&lt;/td&gt;
+&lt;td&gt;shows containers&amp;rsquo; resource usage statistics&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker diff&lt;/td&gt;
+&lt;td&gt;shows changed files in the container&amp;rsquo;s FS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;images&#34;&gt;Images&lt;/h3&gt;
+
+&lt;h4 id=&#34;lifecycle-1&#34;&gt;Lifecycle&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;docker images&lt;/td&gt;
+&lt;td&gt;shows all images&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker import&lt;/td&gt;
+&lt;td&gt;creates an image from a tarball&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker build&lt;/td&gt;
+&lt;td&gt;creates image from Dockerfile&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker commit&lt;/td&gt;
+&lt;td&gt;creates image from a container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker rmi&lt;/td&gt;
+&lt;td&gt;removes an image&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker load&lt;/td&gt;
+&lt;td&gt;loads an image from a tar archive as STDIN, including images an tags (as of 0.7)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker save&lt;/td&gt;
+&lt;td&gt;saves an image to a tar archive stream to STDOUT with all parent layers, tags &amp;amp; versions (as of 0.7)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;info-1&#34;&gt;Info&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;docker history&lt;/td&gt;
+&lt;td&gt;shows history of image&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker tag&lt;/td&gt;
+&lt;td&gt;tags an image to a name (local or registry)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;registry-repository&#34;&gt;Registry &amp;amp; Repository&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;docker login&lt;/td&gt;
+&lt;td&gt;to login to a registry&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker search&lt;/td&gt;
+&lt;td&gt;searches registry for image&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker pull&lt;/td&gt;
+&lt;td&gt;pulls an image from registry to local machine&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker push&lt;/td&gt;
+&lt;td&gt;pushes an image to the registry from local machine&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Ansible</title>
+      <link>https://danielkraic.github.io/2015/09/16/ansible/</link>
+      <pubDate>Wed, 16 Sep 2015 20:54:52 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/16/ansible/</guid>
+      <description>
+
+&lt;p&gt;Ansible is a free software platform for configuring and managing computers. It combines multi-node software deployment, ad hoc task execution, and configuration management. It manages nodes over SSH or PowerShell and requires Python (2.4 or later) to be installed on them. The system uses YAML to express reusable descriptions of systems.&lt;/p&gt;
+
+&lt;h3 id=&#34;installation&#34;&gt;Installation&lt;/h3&gt;
+
+&lt;h4 id=&#34;install-from-ppa&#34;&gt;Install from PPA&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install ansible
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;install-with-pip&#34;&gt;Install with pip&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo pip install ansible
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;configuration&#34;&gt;Configuration&lt;/h3&gt;
+
+&lt;h4 id=&#34;add-localhost-to-hosts-file&#34;&gt;Add localhost to hosts file&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;echo &amp;quot;localhost ansible_connection=local&amp;quot; &amp;gt; ~/ansible_hosts
+export ANSIBLE_INVENTORY=~/ansible_hosts
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;setup-ssh-agent&#34;&gt;Setup SSH-agent&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ssh-agent bash
+ssh-add ~/.ssh/id_rsa
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;inventory-http-docs-ansible-com-ansible-intro-inventory-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/intro_inventory.html&#34;&gt;Inventory&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;[webservers]
+www[01:50].example.com
+
+[databases]
+db-[a:f].example.com
+
+[targets]
+localhost              ansible_connection=local
+other1.example.com     ansible_connection=ssh        ansible_ssh_user=mpdehaan
+other2.example.com     ansible_connection=ssh        ansible_ssh_user=mdehaan
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;ad-hoc-commands-http-docs-ansible-com-ansible-intro-adhoc-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/intro_adhoc.html&#34;&gt;Ad-Hoc Commands&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h4 id=&#34;patterns-http-docs-ansible-com-ansible-intro-patterns-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/intro_patterns.html&#34;&gt;Patterns&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible &amp;lt;pattern_goes_here&amp;gt; -m &amp;lt;module_name&amp;gt; -a &amp;lt;arguments&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ping-hosts&#34;&gt;Ping hosts&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# ping
+ansible all -m ping
+# ask ssh password
+ansible all -m ping --ask-pass
+# as bruce
+$ ansible all -m ping -u bruce
+# as bruce, sudoing to root
+$ ansible all -m ping -u bruce --sudo
+# as bruce, sudoing to batman
+$ ansible all -m ping -u bruce --sudo --sudo-user batman
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;run-command&#34;&gt;Run command&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible localhost -a &amp;quot;/bin/echo hello&amp;quot;
+ansible localhost -a &amp;quot;uname -a&amp;quot;
+ansible localhost -m shell -a &#39;echo $TERM&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;run-command-in-parallel&#34;&gt;Run command in parallel&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible atlanta -a &amp;quot;/sbin/reboot&amp;quot; -f 10
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;run-as-other-user-with-sudo&#34;&gt;Run as other user with sudo&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible atlanta -a &amp;quot;/usr/bin/foo&amp;quot; -u username --sudo [--ask-sudo-pass]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;file-http-docs-ansible-com-ansible-file-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/file_module.html&#34;&gt;File&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# create file and set permissions
+ansible webservers -m file -a &amp;quot;dest=/srv/foo/b.txt mode=600 owner=mdehaan group=mdehaan&amp;quot;
+# create directory
+ansible webservers -m file -a &amp;quot;dest=/path/to/c mode=755 owner=mdehaan group=mdehaan state=directory&amp;quot;
+# delete file
+ansible webservers -m file -a &amp;quot;dest=/path/to/c state=absent&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;copy-http-docs-ansible-com-ansible-copy-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/copy_module.html&#34;&gt;Copy&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# copy file
+ansible atlanta -m copy -a &amp;quot;src=/etc/hosts dest=/tmp/hosts&amp;quot;
+ansible atlanta -m copy -a &amp;quot;src=/srv/myfiles/foo.conf dest=/etc/foo.conf owner=foo group=foo mode=0644 backup=yes&amp;quot;
+ansible atlanta -m copy -a &amp;quot;src=/mine/sudoers dest=/etc/sudoers validate=&#39;visudo -cf %s&#39;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;fetch-http-docs-ansible-com-ansible-fetch-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/fetch_module.html&#34;&gt;Fetch&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# fetch file from remote node
+ansible atlanta -m fetch -a &amp;quot;src=/tmp/somefile dest=/tmp/fetched&amp;quot;
+ansible atlanta -m fetch -a &amp;quot;src=/tmp/somefile dest=/tmp/prefix-{{ ansible_hostname }} flat=yes&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;service-http-docs-ansible-com-ansible-service-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/service_module.html&#34;&gt;Service&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webservers -m service -a &amp;quot;name=httpd state=started&amp;quot;
+ansible webservers -m service -a &amp;quot;name=httpd state=stopped&amp;quot;
+ansible webservers -m service -a &amp;quot;name=httpd state=restarted&amp;quot;
+ansible webservers -m service -a &amp;quot;name=httpd enabled=yes&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;apt-http-docs-ansible-com-ansible-apt-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/apt_module.html&#34;&gt;APT&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# update repositories cache and install package
+ansible local -m apt -a &amp;quot;name=foo update_cache=yes&amp;quot;
+# install latest version of package
+ansible local -m apt -a &amp;quot;name=foo state=latest&amp;quot;
+# install version &#39;1.00&#39; of package &amp;quot;foo&amp;quot;
+ansible local -m apt -a &amp;quot;name=foo=1.00 state=present&amp;quot;
+# remove package
+ansible local -m apt -a &amp;quot;name=foo state=absent&amp;quot;
+# equivalent of &amp;quot;apt-get update&amp;quot;
+ansible local -m apt -a &amp;quot;update_cache=yes&amp;quot;
+# install local deb file
+ansible local -m apt -a &amp;quot;deb=/tmp/mypackage.deb&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;apt-repository-http-docs-ansible-com-ansible-apt-repository-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/apt_repository_module.html&#34;&gt;APT repository&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible local -m apt_repository -a &amp;quot;repo=&#39;deb http://archive.canonical.com/ubuntu hardy partner&#39; state=present&amp;quot;
+ansible local -m apt_repository -a &amp;quot;repo=&#39;deb http://archive.canonical.com/ubuntu hardy partner&#39; state=absent&amp;quot;
+ansible local -m apt_repository -a &amp;quot;repo=&#39;ppa:nginx/stable&#39;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;shell-http-docs-ansible-com-ansible-shell-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/shell_module.html&#34;&gt;Shell&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# execute the command in remote shell
+ansible webserver -m shell -a &amp;quot;somescript.sh &amp;gt;&amp;gt; somelog.txt&amp;quot;
+# change the working directory to somedir/ before executing the command.
+ansible webserver -m shell -a &amp;quot;somescript.sh &amp;gt;&amp;gt; somelog.txt chdir=somedir/&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ini-http-docs-ansible-com-ansible-ini-file-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/ini_file_module.html&#34;&gt;INI&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webserver -m ini_file -a &amp;quot;dest=/etc/conf section=drinks option=fav value=lemonade mode=0600 backup=yes&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;sysctl-http-docs-ansible-com-ansible-sysctl-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/sysctl_module.html&#34;&gt;Sysctl&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# set vm.swappiness to 5 in /etc/sysctl.conf
+ansible webserver -m sysctl &#39;name=vm.swappiness value=5 state=present&#39;
+# remove kernel.panic entry from /etc/sysctl.conf
+ansible webserver -m sysctl &#39;name=kernel.panic state=absent sysctl_file=/etc/sysctl.conf&#39;
+# set kernel.panic to 3 in /tmp/test_sysctl.conf
+ansible webserver -m sysctl &#39;name=kernel.panic value=3 sysctl_file=/tmp/test_sysctl.conf reload=no&#39;
+# set ip forwarding on in /proc and do not reload the sysctl file
+ansible webserver -m sysctl &#39;name=&amp;quot;net.ipv4.ip_forward&amp;quot; value=1 sysctl_set=yes&#39;
+# set ip forwarding on in /proc and in the sysctl file and reload if necessary
+ansible webserver -m sysctl &#39;name=&amp;quot;net.ipv4.ip_forward&amp;quot; value=1 sysctl_set=yes state=present reload=yes&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;script-http-docs-ansible-com-ansible-script-module-html-runs-a-local-script-on-a-remote-node-after-transferring-it&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/script_module.html&#34;&gt;Script&lt;/a&gt; - Runs a local script on a remote node after transferring it&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webserver -m script -a &amp;quot;/some/local/script.sh --some-arguments 1234&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;git-http-docs-ansible-com-ansible-git-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/git_module.html&#34;&gt;Git&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webservers -m git -a &amp;quot;repo=git://foo.example.org/repo.git dest=/srv/myapp version=HEAD&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;assemble-http-docs-ansible-com-ansible-assemble-module-html-assembles-a-configuration-file-from-fragments&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/assemble_module.html&#34;&gt;Assemble&lt;/a&gt; - Assembles a configuration file from fragments&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webserver -m assemble -a &amp;quot;src=/etc/someapp/fragments dest=/etc/someapp/someapp.conf&amp;quot;
+# when a delimiter is specified, it will be inserted in between each fragment
+ansible webserver -m assemble -a &amp;quot;src=/etc/someapp/fragments dest=/etc/someapp/someapp.conf delimiter=&#39;### START FRAGMENT ###&#39;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;lineinfile-http-docs-ansible-com-ansible-lineinfile-module-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/lineinfile_module.html&#34;&gt;LineInFile&lt;/a&gt;&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ansible webserver -m lineinfile -a &#39;dest=/etc/sudoers state=absent regexp=&amp;quot;^%wheel&amp;quot;&#39;
+ansible webserver -m lineinfile -a &#39;dest=/etc/httpd/conf/httpd.conf regexp=&amp;quot;^Listen &amp;quot; insertafter=&amp;quot;^#Listen &amp;quot; line=&amp;quot;Listen 8080&amp;quot;&#39;
+ansible webserver -m lineinfile -a &#39;dest=/etc/services regexp=&amp;quot;^# port for http&amp;quot; insertbefore=&amp;quot;^www.*80/tcp&amp;quot; line=&amp;quot;# port for http by default&amp;quot;&#39;
+ansible webserver -m lineinfile -a &#39;dest=/tmp/testfile line=&amp;quot;192.168.1.99 foo.lab.net foo&amp;quot;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;playbooks-http-docs-ansible-com-ansible-playbooks-html&#34;&gt;&lt;a href=&#34;http://docs.ansible.com/ansible/playbooks.html&#34;&gt;Playbooks&lt;/a&gt;&lt;/h3&gt;
+
+&lt;h4 id=&#34;examples&#34;&gt;Examples&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;---
+- hosts: webservers
+  vars:
+    http_port: 80
+    max_clients: 200
+  remote_user: root
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: write the apache config file
+    template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+    notify:
+    - restart apache
+  - name: ensure apache is running (and enable it at boot)
+    service: name=httpd state=started enabled=yes
+  handlers:
+    - name: restart apache
+      service: name=httpd state=restarted
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;---
+- hosts: webservers
+  vars:
+    http_port: 80
+    max_clients: 200
+  remote_user: root
+  tasks:
+  - name: ensure apache is at the latest version
+    yum:
+      pkg: httpd
+      state: latest
+  - name: write the apache config file
+    template:
+      src: /srv/httpd.j2
+      dest: /etc/httpd.conf
+    notify:
+    - restart apache
+  - name: ensure apache is running
+    service:
+      name: httpd
+      state: started
+  handlers:
+    - name: restart apache
+      service:
+        name: httpd
+        state: restarted
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;---
+- hosts: webservers
+  remote_user: root
+
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: write the apache config file
+    template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+
+- hosts: databases
+  remote_user: root
+
+  tasks:
+  - name: ensure postgresql is at the latest version
+    yum: name=postgresql state=latest
+  - name: ensure that postgresql is started
+    service: name=postgresql state=running
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

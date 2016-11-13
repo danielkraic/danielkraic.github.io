@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cpp on Linux blog</title>
+    <link>https://danielkraic.github.io/tags/cpp/</link>
+    <description>Recent content in Cpp on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 27 May 2016 10:34:00 +0200</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/tags/cpp/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>CPP variant</title>
+      <link>https://danielkraic.github.io/2016/05/27/cpp-variant/</link>
+      <pubDate>Fri, 27 May 2016 10:34:00 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/05/27/cpp-variant/</guid>
+      <description>
+
+&lt;h1 id=&#34;variants&#34;&gt;Variants&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;resembles union&lt;/li&gt;
+&lt;li&gt;able to store values of different types in a boost::variant variable&lt;/li&gt;
+&lt;li&gt;at any point only one value can be stored&lt;/li&gt;
+&lt;li&gt;When a new value is assigned, the old value is overwritten&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;boost::variant&amp;lt;double, char, std::string&amp;gt; v;
+v = 3.14;
+std::cout &amp;lt;&amp;lt; boost::get&amp;lt;double&amp;gt;(v) &amp;lt;&amp;lt; &#39;\n&#39;;
+v = &#39;A&#39;;
+std::cout &amp;lt;&amp;lt; boost::get&amp;lt;char&amp;gt;(v) &amp;lt;&amp;lt; &#39;\n&#39;;
+v = &amp;quot;Boost&amp;quot;;
+std::cout &amp;lt;&amp;lt; boost::get&amp;lt;std::string&amp;gt;(v) &amp;lt;&amp;lt; &#39;\n&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;motivation&#34;&gt;Motivation&lt;/h2&gt;
+
+&lt;h3 id=&#34;example-1&#34;&gt;Example 1&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;before&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class PersonId {
+public:
+  std::string getName();
+  int getJohnDoeId();
+  // etc.
+private:
+  bool m_hasName;
+  std::string m_name;
+  int m_johnDoeId;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;after&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;using PersonId = variant&amp;lt;std::string, int&amp;gt;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;example-2&#34;&gt;Example 2&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;before&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct command {
+  enum type { SET_SCORE, FIRE_MISSILE, FIRE_LASER, ROTATE };
+  virtual type getType();
+};
+struct set_score : commmand {
+  type getType() { return SET_SCORE; } override final;
+  double value;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;after&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct set_score {
+  double value;
+};
+using command = variant&amp;lt;set_score, fire_missile, fire_laser, rotate&amp;gt;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;timeline&#34;&gt;Timeline&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;2004 - Boost.Variant released in Boost 1.31.0.&lt;/li&gt;
+&lt;li&gt;2016 - std::variant recommended for C++17 by LEWG.&lt;/li&gt;
+&lt;li&gt;2020 - Language-based variants in C++20?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;boost-variant&#34;&gt;boost::variant&lt;/h2&gt;
+
+&lt;h4 id=&#34;creation-and-assignment&#34;&gt;Creation and Assignment&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Default constructs to first alternative.
+boost::variant&amp;lt;std::string, int&amp;gt; v;
+// Assignment to alternative types.
+v = 3;
+v = &amp;quot;Hello World&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;extract-a-value-with-get&#34;&gt;Extract a Value with get&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;void output(const boost::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  if(std::string const * const s = boost::get&amp;lt;std::string&amp;gt;(&amp;amp;v))
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; *s &amp;lt;&amp;lt; std:endl;
+  else
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; boost::get&amp;lt;int&amp;gt;(v) &amp;lt;&amp;lt; std:endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;extract-a-value-with-a-visitor&#34;&gt;Extract a Value with a visitor&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct OutputVisitor
+{
+  using result_type = void;
+  void operator()(const std::string&amp;amp; s) const {
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; s &amp;lt;&amp;lt; std:endl;
+  }
+  void operator()(const int i) const {
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; i &amp;lt;&amp;lt; std:endl;
+  }
+};
+void output(const boost::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  boost::apply_visitor(OutputVisitor(), v);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;std-variant&#34;&gt;std::variant&lt;/h2&gt;
+
+&lt;h4 id=&#34;change-1-apply-visitor-renamed&#34;&gt;Change 1: apply_visitor renamed&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct OutputVisitor
+{
+  void operator()(const std::string&amp;amp; s) const {
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; s &amp;lt;&amp;lt; std:endl;
+  }
+  void operator()(const int i) const {
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; i &amp;lt;&amp;lt; std:endl;
+  }
+};
+void output(const std::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  std::visit(OutputVisitor(), v);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;void output(const std::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  return std::visit(
+    std::overload(
+      [](const std::string &amp;amp; s) {  
+        std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; s &amp;lt;&amp;lt; std:endl;
+      },
+      [](const int i) {  
+        std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; i &amp;lt;&amp;lt; std:endl;
+      } ),
+    v );
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;change-2-get-reworked&#34;&gt;Change 2: get reworked&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;void output(const std::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  if(std::string const * const s = std::get_if&amp;lt;std::string&amp;gt;(&amp;amp;v))
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; *s &amp;lt;&amp;lt; std:endl;
+  else
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; std::get&amp;lt;int&amp;gt;(v) &amp;lt;&amp;lt; std:endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;change-3-index-based-access&#34;&gt;Change 3: index-based access.&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;void output(const std::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  if(std::string const * const s = std::get_if&amp;lt;0&amp;gt;(&amp;amp;v))
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; *s &amp;lt;&amp;lt; std:endl;
+  else
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; std::get&amp;lt;1&amp;gt;(v) &amp;lt;&amp;lt; std:endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;language-support-for-variant&#34;&gt;Language support for variant.&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;lvariant command {
+  std::size_t    set_score;    // Set the score to value.
+  std::monostate fire_missile; // Fire a missile.
+  unsigned       fire_laser;   // Fire a laser with the specified
+                               // intensity.
+  double         rotate;       // Rotate the ship by the specified
+                               // degrees.
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;lvariant json_value {
+  std::map&amp;lt;std::string, json_value&amp;gt; object;
+  std::vector&amp;lt;json_value&amp;gt; array;
+  std::string string;
+  double number;
+  bool boolean;
+  std::monostate null_;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;creation-of-alternatives&#34;&gt;Creation of Alternatives&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Create a new command &#39;cmd&#39; that sets the score to &#39;10&#39;.
+command cmd = command::set_score( 10 );
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;basic-pattern-matching&#34;&gt;Basic Pattern Matching&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Output a human readable string corresponding to the specified &#39;cmd&#39;
+// command to the specified &#39;stream&#39;.
+std::ostream&amp;amp; operator&amp;lt;&amp;lt;( std::ostream&amp;amp; stream, const command cmd ) {
+  inspect( cmd ) {
+    set_score value =&amp;gt;
+      stream &amp;lt;&amp;lt; &amp;quot;Set the score to &amp;quot; &amp;lt;&amp;lt; value &amp;lt;&amp;lt; &amp;quot;.\n&amp;quot;;
+    fire_missile m =&amp;gt;
+      stream &amp;lt;&amp;lt; &amp;quot;Fire a missile.\n&amp;quot;;
+    fire_laser intensity =&amp;gt;
+      stream &amp;lt;&amp;lt; &amp;quot;Fire a laser with &amp;quot; &amp;lt;&amp;lt; intensity &amp;lt;&amp;lt; &amp;quot; intensity.\n&amp;quot;;
+    rotate degrees =&amp;gt;:
+      stream &amp;lt;&amp;lt; &amp;quot;Rotate by &amp;quot; &amp;lt;&amp;lt; degrees &amp;lt;&amp;lt; &amp;quot; degrees.\n&amp;quot;;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Boost DI</title>
+      <link>https://danielkraic.github.io/2016/05/27/boost-di/</link>
+      <pubDate>Fri, 27 May 2016 10:33:23 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/05/27/boost-di/</guid>
+      <description>
+
+&lt;h1 id=&#34;boost-di&#34;&gt;Boost::DI&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;C++14 header only Dependency Injection library with no dependencies&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;dependency-injection-di&#34;&gt;Dependency Injection (DI)&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
+
+&lt;h3 id=&#34;no-dependency-injection&#34;&gt;No dependency injection&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class coffee_maker {
+public:
+  // create dependencies in the constructor
+  coffee_maker()
+  : heater(std::make_shared&amp;lt;electric_heater&amp;gt;())
+  , pump(std::make_unique&amp;lt;heat_pump&amp;gt;(heater))
+  { }
+  void brew() {
+    heater-&amp;gt;on();
+    pump-&amp;gt;pump();
+  }
+private:
+  std::shared_ptr&amp;lt;iheater&amp;gt; heater;
+  std::unique_ptr&amp;lt;ipump&amp;gt; pump;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;dependency-injection&#34;&gt;Dependency injection&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class coffee_maker {
+public:
+  // inject dependencies via constructor
+  coffee_maker(std::shared_ptr&amp;lt;iheater&amp;gt; heater, std::unique_ptr&amp;lt;ipump&amp;gt; pump)
+  : heater(heater), pump(std::move(pump))
+  { }
+  void brew() {
+    heater-&amp;gt;on();
+    pump-&amp;gt;pump();
+  }
+private:
+  std::shared_ptr&amp;lt;iheater&amp;gt; heater;
+  std::unique_ptr&amp;lt;ipump&amp;gt; pump;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;motivation&#34;&gt;Motivation&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;DI provides loosely coupled code (separation of business logic and object creation)&lt;/li&gt;
+&lt;li&gt;DI provides easier to maintain code (different objects might be easily injected)&lt;/li&gt;
+&lt;li&gt;DI provides easier to test code (fakes objects might be injected)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;examples&#34;&gt;Examples&lt;/h2&gt;
+
+&lt;h4 id=&#34;example-1&#34;&gt;Example 1&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;app&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct renderer { int device; };
+class iview {
+public:
+virtual ~iview() = default;
+virtual void update() = 0;
+};
+class model {};
+class controller {
+public:
+controller(model&amp;amp;, view&amp;amp;) {}
+};
+class user {};
+class app {
+public:
+app(controller&amp;amp;, user&amp;amp;) {}
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;usual approach to create app&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;renderer renderer_;
+view view_{&amp;quot;title&amp;quot;, renderer_};
+model model_;
+controller controller_{model_, view_};
+user user_;
+app app_{controller_, user_};
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;create app with boost::di&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;auto app = di::make_injector().create&amp;lt;app&amp;gt;();
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;example-2&#34;&gt;Example 2&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class controller;
+
+struct renderer {
+  int device;
+};
+
+class view {
+ public:
+  view(std::string /*title*/, const renderer&amp;amp;) {}
+};
+
+class model {};
+class user {};
+
+class app {
+ public:
+  app(controller&amp;amp;, user&amp;amp;) {}
+};
+
+/// CREATE OBJECTS TREE
+class controller {
+ public:
+  controller(model&amp;amp;, view&amp;amp;) {}
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;int main() {
+  /// NO DEPENDENCY INJECTION
+  {
+    renderer renderer_;
+    view view_{&amp;quot;&amp;quot;, renderer_};
+    model model_;
+    controller controller_{model_, view_};
+    user user_;
+    app app_{controller_, user_};
+    (void)app_;
+  }
+
+  /// DEPENDENCY INJECTION
+  {
+    auto injector = di::make_injector();
+    auto app_ = injector.create&amp;lt;app&amp;gt;();
+    (void)app_;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;/// CHANGE CONTROLLER CONSTRUCTOR ORDER
+class controller {
+ public:
+  controller(view&amp;amp;, model&amp;amp;) {}
+};
+
+int main() {
+  /// NO DEPENDENCY INJECTION
+  {
+  renderer renderer_;
+  view view_{&amp;quot;&amp;quot;, renderer_};
+  model model_;
+  //controller controller_{model_, view_};
+  controller controller_{view_, model_}; /// CHANGE
+  user user_;
+  app app_{controller_, user_};
+  (void)app_;
+  }
+
+  /// DEPENDENCY INJECTION
+  {
+  auto injector = di::make_injector();
+  auto app_ = injector.create&amp;lt;app&amp;gt;();
+  (void)app_;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;/// ADD A NEW DEPENDENCY TO CONTROLLER
+struct configuration {};
+class controller {
+ public:
+  controller(view&amp;amp;, model&amp;amp;, configuration) {}
+};
+
+int main() {
+  /// NO DEPENDENCY INJECTION
+  {
+  renderer renderer_;
+  view view_{&amp;quot;&amp;quot;, renderer_};
+  model model_;
+  //controller controller_{model_, view_};
+  controller controller_{view_, model_, configuration{}}; /// CHANGE
+  user user_;
+  app app_{controller_, user_};
+  (void)app_;
+  }
+
+  /// DEPENDENCY INJECTION
+  {
+  auto injector = di::make_injector();
+  auto app_ = injector.create&amp;lt;app&amp;gt;();
+  (void)app_;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;bindings&#34;&gt;Bindings&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;interfaces&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class iview {
+public:
+  virtual ~iview() noexcept = default;
+  virtual void update() =0;
+};
+
+class gui_view: public iview {
+public:
+  gui_view(std::string title, const renderer&amp;amp;) {}
+  void update() override {}
+};
+
+class text_view: public iview {
+public:
+  void update() override {}
+};
+
+auto injector = di::make_injector(
+  di::bind&amp;lt;iview&amp;gt;.to&amp;lt;gui_view&amp;gt;() // bind interface to implementation
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct T { // create using uniform initialization
+  int&amp;amp; a;  // might be used to serialize
+  double b;
+};
+
+auto i = 42;
+auto injector = di::make_injector(
+  di::bind&amp;lt;int&amp;gt;.to(i),
+  di::bind&amp;lt;double&amp;gt;.to(87.0)
+);
+injector.create&amp;lt;T&amp;gt;(); // will create T{i, 87.0};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;auto use_gui_view = true/false;
+
+auto injector = di::make_injector(
+  di::bind&amp;lt;iview&amp;gt;.to([&amp;amp;](const auto&amp;amp; injector) -&amp;gt; iview&amp;amp; {
+    return use_gui_view ?
+      injector.template create&amp;lt;gui_view&amp;amp;&amp;gt;() :
+      injector.template create&amp;lt;text_view&amp;amp;&amp;gt;();
+  })
+);
+
+use_gui_view = true;
+assert(dynamic_cast&amp;lt;gui_view*&amp;gt;(
+  injector.create&amp;lt;std::unique_ptr&amp;lt;iview&amp;gt;().get())
+);
+
+use_gui_view = false;
+assert(dynamic_cast&amp;lt;text_view*&amp;gt;(
+  injector.create&amp;lt;std::unique_ptr&amp;lt;iview&amp;gt;().get())
+);
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>GDB</title>
+      <link>https://danielkraic.github.io/2016/05/24/gdb/</link>
+      <pubDate>Tue, 24 May 2016 10:30:00 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/05/24/gdb/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;http://www.root.cz/clanky/trasovani-a-ladeni-nativnich-aplikaci-v-linuxu-pouziti-gdb-a-jeho-nadstaveb/&#34;&gt;http://www.root.cz/clanky/trasovani-a-ladeni-nativnich-aplikaci-v-linuxu-pouziti-gdb-a-jeho-nadstaveb/&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gdb program
+gdb program core
+gdb program 1234
+
+help
+
+q
+
+shell date
+!date
+
+set logging on
+set logging off
+set logging file file # default logfile is gdb.txt.
+
+info program
+info functions
+info sources
+info sharedlibrary
+
+list
+list main
+list 1,12
+
+search regex
+reverse-search regex
+
+run
+
+break main
+clear main
+info breakpoints
+
+n
+c
+
+print(i)
+print(argc&amp;gt;0)
+print(atoi(&amp;quot;42&amp;quot;))
+print(isdigit(&#39;4&#39;))
+print(isdigit(&#39;a&#39;))
+
+bt
+
+ulimit -c unlimited
+./npe
+Segmentation fault (core dumped)
+
+gdb npe core
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Qt Creator</title>
+      <link>https://danielkraic.github.io/2015/09/30/qt-creator/</link>
+      <pubDate>Wed, 30 Sep 2015 19:11:33 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/30/qt-creator/</guid>
+      <description>
+
+&lt;h4 id=&#34;window&#34;&gt;Window&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl Shift F11&lt;/td&gt;
+&lt;td&gt;full screen&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt 0&lt;/td&gt;
+&lt;td&gt;show site bar&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt &amp;lt;-&lt;/td&gt;
+&lt;td&gt;go back&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl Tab&lt;/td&gt;
+&lt;td&gt;next window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl Shift Tab&lt;/td&gt;
+&lt;td&gt;previous window&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;locate&#34;&gt;Locate&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl K&lt;/td&gt;
+&lt;td&gt;locate&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F4&lt;/td&gt;
+&lt;td&gt;switch between source/header&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F2&lt;/td&gt;
+&lt;td&gt;follow symbol under cursor&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Shift F2&lt;/td&gt;
+&lt;td&gt;switch between declaration/definition&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl Shift U&lt;/td&gt;
+&lt;td&gt;find usage&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl Shift R&lt;/td&gt;
+&lt;td&gt;rename symbol under cursor&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;bookmarks&#34;&gt;Bookmarks&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl M&lt;/td&gt;
+&lt;td&gt;toogle bookmark&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl .&lt;/td&gt;
+&lt;td&gt;next bookmark&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl ,&lt;/td&gt;
+&lt;td&gt;previous bookmark&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;git&#34;&gt;Git&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt D&lt;/td&gt;
+&lt;td&gt;diff current file&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt L&lt;/td&gt;
+&lt;td&gt;log current file&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt B&lt;/td&gt;
+&lt;td&gt;blame current file&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt Shift D&lt;/td&gt;
+&lt;td&gt;diff project&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt K&lt;/td&gt;
+&lt;td&gt;log project&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt C&lt;/td&gt;
+&lt;td&gt;commit&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;debug&#34;&gt;Debug&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;F5&lt;/td&gt;
+&lt;td&gt;start debugging/continue&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F10&lt;/td&gt;
+&lt;td&gt;step over&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F11&lt;/td&gt;
+&lt;td&gt;step into&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F9&lt;/td&gt;
+&lt;td&gt;toggle breakpoint&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;build&#34;&gt;Build&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl B&lt;/td&gt;
+&lt;td&gt;build project&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl R&lt;/td&gt;
+&lt;td&gt;run&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;edit&#34;&gt;Edit&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl F&lt;/td&gt;
+&lt;td&gt;find/replace&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl /&lt;/td&gt;
+&lt;td&gt;toggle comment selection&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl L&lt;/td&gt;
+&lt;td&gt;go to line&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt U&lt;/td&gt;
+&lt;td&gt;uppercase&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt Shift U&lt;/td&gt;
+&lt;td&gt;lowercase&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl &amp;lt;&lt;/td&gt;
+&lt;td&gt;fold&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl &amp;gt;&lt;/td&gt;
+&lt;td&gt;unfold&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CPP random engine</title>
+      <link>https://danielkraic.github.io/2015/09/24/cpp-random-engine/</link>
+      <pubDate>Thu, 24 Sep 2015 10:33:23 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/24/cpp-random-engine/</guid>
+      <description>
+
+&lt;p&gt;C++11 random engine&lt;/p&gt;
+
+&lt;h4 id=&#34;example-sleep-for-100-1000-milliseconds&#34;&gt;Example - sleep for 100-1000 milliseconds&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;random&amp;gt;
+#include &amp;lt;thread&amp;gt;
+#include &amp;lt;chrono&amp;gt;
+
+std::random_device rd;
+std::default_random_engine dre(rd());
+std::uniform_int_distribution&amp;lt;int&amp;gt; id(100,1000);
+
+std::this_thread::sleep_for(std::chrono::milliseconds(id(dre)));
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CMake</title>
+      <link>https://danielkraic.github.io/2015/09/24/cmake/</link>
+      <pubDate>Thu, 24 Sep 2015 09:10:10 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/24/cmake/</guid>
+      <description>
+
+&lt;p&gt;CMake is tool for managing software build process using a compiler-independent method. It is designed to support directory hierarchies and applications that depend on multiple libraries.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cmake -DCMAKE_BUILD_TYPE=Debug ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+cmake ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cmake -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++ ..
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cmake&#34;&gt;cmake_minimum_required(VERSION 2.6)
+enable_language(CXX)
+project(project-name)
+
+# setting build output directory
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+
+set(CMAKE_CXX_COMPILER &amp;quot;g++-4.8&amp;quot;)
+set(CMAKE_CXX_FLAGS &amp;quot;${CMAKE_CXX_FLAGS} -O2 -Wall -Werror -Weffc++ -fopenmp -std=c++11&amp;quot;)
+
+include_directories(&amp;quot;/usr/include/customlib&amp;quot;)
+
+FILE(GLOB WEB_BENCHMARK_SRCS *.cpp)
+add_executable(bin-name ${PROJECT_SRCS})
+include_directories(${CMAKE_SOURCE_DIR})
+
+target_link_libraries(myapp test)
+
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG(&amp;quot;-std=c++11&amp;quot; COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG(&amp;quot;-std=c++0x&amp;quot; COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS &amp;quot;${CMAKE_CXX_FLAGS} -std=c++11&amp;quot;)
+elseif(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS &amp;quot;${CMAKE_CXX_FLAGS} -std=c++0x&amp;quot;)
+else()
+        message(STATUS &amp;quot;The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.&amp;quot;)
+endif()
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

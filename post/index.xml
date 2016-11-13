@@ -1,0 +1,2945 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Linux blog</title>
+    <link>https://danielkraic.github.io/post/</link>
+    <description>Recent content in Posts on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 13 Sep 2016 13:46:10 +0200</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>MongoDB</title>
+      <link>https://danielkraic.github.io/2016/09/13/mongodb/</link>
+      <pubDate>Tue, 13 Sep 2016 13:46:10 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/09/13/mongodb/</guid>
+      <description>
+
+&lt;h1 id=&#34;mongodb&#34;&gt;MongoDB&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;help
+
+show dbs
+show collections
+show users
+show roles
+show profile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;use &amp;lt;db&amp;gt;
+
+coll = db.&amp;lt;collection&amp;gt;
+coll.find();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;operators&#34;&gt;operators&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;$eq, $gt, $gte, $lt, $lte, $ne, $in, $nin&lt;/li&gt;
+&lt;li&gt;$and, $or, $not, $nor&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;find&#34;&gt;find&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find()
+db.restaurants.findOne()
+db.restaurants.find( { &amp;quot;grades.grade&amp;quot;: &amp;quot;B&amp;quot; } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.find( { name: null } )
+db.users.find( { name : { $exists: false } } )
+db.users.find( { name : { $type: 10 } } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find( { &amp;quot;grades.score&amp;quot;: { $gt: 30 } } )
+db.restaurants.find( { &amp;quot;grades.score&amp;quot;: { $lt: 10 } } )
+//and
+db.restaurants.find( { &amp;quot;cuisine&amp;quot;: &amp;quot;Italian&amp;quot;, &amp;quot;address.zipcode&amp;quot;: &amp;quot;10075&amp;quot; } )
+//or
+db.restaurants.find(
+   { $or: [ { &amp;quot;cuisine&amp;quot;: &amp;quot;Italian&amp;quot; }, { &amp;quot;address.zipcode&amp;quot;: &amp;quot;10075&amp;quot; } ] }
+)
+db.users.find( { status: { $in: [ &amp;quot;P&amp;quot;, &amp;quot;D&amp;quot; ] } } )
+db.users.find( { status: &amp;quot;A&amp;quot;, age: { $lt: 30 } } )
+db.users.find(
+   {
+     status: &amp;quot;A&amp;quot;,
+     $or: [ { age: { $lt: 30 } }, { type: 1 } ]
+   }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;query-embedded-document&#34;&gt;query embedded document&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.find( { &amp;quot;favorites.artist&amp;quot;: &amp;quot;Picasso&amp;quot; } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;query-array&#34;&gt;query array&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;//exact match
+db.users.find( { badges: [ &amp;quot;blue&amp;quot;, &amp;quot;black&amp;quot; ] } )
+//match array element
+db.users.find( { badges: &amp;quot;black&amp;quot; } )
+//match specific array element
+db.users.find( { &amp;quot;badges.0&amp;quot;: &amp;quot;black&amp;quot; } )
+//Multiple Criteria for Array Elements
+db.users.find( { finished: { $elemMatch: { $gt: 15, $lt: 20 } } } )
+// Array of Embedded Documents
+db.users.find( { &#39;points.0.points&#39;: { $lte: 55 } } )
+db.users.find( { &#39;points.points&#39;: { $lte: 55 } } )
+db.users.find( { points: { $elemMatch: { points: { $lte: 70 }, bonus: 20 } } } )
+db.users.find( { &amp;quot;points.points&amp;quot;: { $lte: 70 }, &amp;quot;points.bonus&amp;quot;: 20 } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;sort&#34;&gt;sort&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find().sort( { name: 1 } );
+db.restaurants.find().sort( { name: -1 } );
+db.restaurants.find().sort( { &amp;quot;borough&amp;quot;: 1, &amp;quot;address.zipcode&amp;quot;: 1 } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;projection&#34;&gt;projection&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find({}, { name:true, restaurant_id:true} )
+db.users.find( { status: &amp;quot;A&amp;quot; }, { name: 1, status: 1, _id: 0 } )
+// return fields of embedded doc
+db.users.find(
+   { status: &amp;quot;A&amp;quot; },
+   { name: 1, status: 1, &amp;quot;favorites.food&amp;quot;: 1 }
+)
+// return all but excluded
+db.users.find( { status: &amp;quot;A&amp;quot; }, { favorites: 0, points: 0 } )
+// return  Specific Array Elements
+db.users.find( { status: &amp;quot;A&amp;quot; }, { name: 1, status: 1, points: { $slice: -1 } } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;limit&#34;&gt;limit&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find().limit(1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;skip&#34;&gt;skip&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find().limit(10)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;insert&#34;&gt;insert&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.insertOne(
+   {
+      name: &amp;quot;sue&amp;quot;,
+      age: 19,
+      status: &amp;quot;P&amp;quot;
+   }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.insertMany(
+   [
+     { name: &amp;quot;bob&amp;quot;, age: 42, status: &amp;quot;A&amp;quot;, },
+     { name: &amp;quot;ahn&amp;quot;, age: 22, status: &amp;quot;A&amp;quot;, },
+     { name: &amp;quot;xi&amp;quot;, age: 34, status: &amp;quot;D&amp;quot;, }
+   ]
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;// insert single doc
+db.users.insert(
+   {
+      name: &amp;quot;sue&amp;quot;,
+      age: 19,
+      status: &amp;quot;P&amp;quot;
+   }
+)
+
+// insert multiple docs
+db.users.insert(
+   [
+     { name: &amp;quot;bob&amp;quot;, age: 42, status: &amp;quot;A&amp;quot;, },
+     { name: &amp;quot;ahn&amp;quot;, age: 22, status: &amp;quot;A&amp;quot;, },
+     { name: &amp;quot;xi&amp;quot;, age: 34, status: &amp;quot;D&amp;quot;, }
+   ]
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;update&#34;&gt;update&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;{ upsert : true}&lt;/code&gt; - update or insert new&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;{ multi : true}&lt;/code&gt; - update multiple dics&lt;/li&gt;
+&lt;li&gt;updateOne&lt;/li&gt;
+&lt;li&gt;updateMany&lt;/li&gt;
+&lt;li&gt;replaceOne/update&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;update-operators&#34;&gt;update operators&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;$inc, $mul, $rename, $setOrInsert, $set, $unset, $min, $max, $currentDate&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.update(
+    { &amp;quot;name&amp;quot; : &amp;quot;Juni&amp;quot; },
+    {
+      $set: { &amp;quot;cuisine&amp;quot;: &amp;quot;American (New)&amp;quot; },
+      $currentDate: { &amp;quot;lastModified&amp;quot;: true }
+    }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.update(
+  { &amp;quot;restaurant_id&amp;quot; : &amp;quot;41156888&amp;quot; },
+  { $set: { &amp;quot;address.street&amp;quot;: &amp;quot;East 31st Street&amp;quot; } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;update-multiple-docs&#34;&gt;update multiple docs&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.update(
+  { &amp;quot;address.zipcode&amp;quot;: &amp;quot;10016&amp;quot;, cuisine: &amp;quot;Other&amp;quot; },
+  {
+    $set: { cuisine: &amp;quot;Category To Be Determined&amp;quot; },
+    $currentDate: { &amp;quot;lastModified&amp;quot;: true }
+  },
+  { multi: true}
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;update-array&#34;&gt;update array&lt;/h3&gt;
+
+&lt;h4 id=&#34;elemmatch&#34;&gt;$elemMatch&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;db.students.update(
+   {
+     _id: 4,
+     grades: { $elemMatch: { grade: { $lte: 90 }, mean: { $gt: 80 } } }
+   },
+   { $set: { &amp;quot;grades.$.std&amp;quot; : 6 } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;placeholder&#34;&gt;placeholder $&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;// positional $ operator acts as a placeholder for the first match of the update query
+db.students.update(
+   { _id: 1, grades: 80 },
+   { $set: { &amp;quot;grades.$&amp;quot; : 82 } }
+)
+db.students.update(
+   { _id: 4, &amp;quot;grades.grade&amp;quot;: 85 },
+   { $set: { &amp;quot;grades.$.std&amp;quot; : 6 } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;addtoset&#34;&gt;$addToSet&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.update(
+  { letters : { $exists: true } },
+  { $addToSet: { letters: &amp;quot;g&amp;quot; } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;each&#34;&gt;$each&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.update(
+  { letters : { $exists: true } },
+  { $addToSet: { letters: { $each:[&amp;quot;f&amp;quot;,&amp;quot;e&amp;quot;] } } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;replace-doc&#34;&gt;replace doc&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.update(
+   { &amp;quot;restaurant_id&amp;quot; : &amp;quot;41704620&amp;quot; },
+   {
+     &amp;quot;name&amp;quot; : &amp;quot;Vella 2&amp;quot;,
+     &amp;quot;address&amp;quot; : {
+              &amp;quot;coord&amp;quot; : [ -73.9557413, 40.7720266 ],
+              &amp;quot;building&amp;quot; : &amp;quot;1480&amp;quot;,
+              &amp;quot;street&amp;quot; : &amp;quot;2 Avenue&amp;quot;,
+              &amp;quot;zipcode&amp;quot; : &amp;quot;10075&amp;quot;
+     }
+   }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;remove&#34;&gt;remove&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.remove( { &amp;quot;borough&amp;quot;: &amp;quot;Manhattan&amp;quot; } )
+db.restaurants.remove( { &amp;quot;borough&amp;quot;: &amp;quot;Queens&amp;quot; }, { justOne: true } )
+//remove all docs
+db.restaurants.remove( { } )
+//drop collection
+db.restaurants.drop()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;aggregate&#34;&gt;aggregate&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.aggregate(
+   [
+     { $group: { &amp;quot;_id&amp;quot;: &amp;quot;$borough&amp;quot;, &amp;quot;count&amp;quot;: { $sum: 1 } } }
+   ]
+);
+db.restaurants.aggregate(
+   [
+     { $match: { &amp;quot;borough&amp;quot;: &amp;quot;Queens&amp;quot;, &amp;quot;cuisine&amp;quot;: &amp;quot;Brazilian&amp;quot; } },
+     { $group: { &amp;quot;_id&amp;quot;: &amp;quot;$address.zipcode&amp;quot; , &amp;quot;count&amp;quot;: { $sum: 1 } } }
+   ]
+);
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>git</title>
+      <link>https://danielkraic.github.io/2016/08/29/git/</link>
+      <pubDate>Mon, 29 Aug 2016 15:25:28 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/08/29/git/</guid>
+      <description>
+
+&lt;h1 id=&#34;git&#34;&gt;git&lt;/h1&gt;
+
+&lt;h2 id=&#34;config&#34;&gt;config&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git config --global user.name &amp;quot;John Doe&amp;quot;
+git config --global user.email johndoe@example.com
+git config --global core.editor nvim
+git config --global core.difftool meld
+git config --global core.mergetool meld
+
+git difftool --tool-help
+git mergetool --tool-help
+
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+
+git config --global alias.unstage &#39;reset HEAD --&#39;
+# git unstaged file_name
+# git reset HEAD file_name
+
+git config --global alias.visual &#39;!gitk&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cat /etc/gitconfig
+cat ~/.gitconfig
+
+git config --list
+git config user.name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;help&#34;&gt;help&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git help &amp;lt;verb&amp;gt;
+git &amp;lt;verb&amp;gt; --help
+man git-&amp;lt;verb&amp;gt;
+git help config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;gitignore&#34;&gt;gitignore&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Blank lines or lines starting with # are ignored.&lt;/li&gt;
+&lt;li&gt;Standard glob patterns work.&lt;/li&gt;
+&lt;li&gt;You can start patterns with a forward slash ( / ) to avoid recursivity.&lt;/li&gt;
+&lt;li&gt;You can end patterns with a forward slash ( / ) to specify a directory.&lt;/li&gt;
+&lt;li&gt;You can negate a pattern by starting it with an exclamation point ( ! ).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cat .gitignore
+# no .a files
+*.a
+# except lib.a
+!lib.a
+# only ignore the TODO file in the current directory, not subdir/TODO
+/TODO
+# ignore all files in the build/ directory
+build/
+# ignore doc/notes.txt, but not doc/server/arch.txt
+doc/*.txt
+# ignore all .pdf files in the doc/ directory
+doc/**/*.pdf
+        ```
+
+## init
+
+```bash
+git init
+git clone [url]
+git clone [url] dir_nam
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;status&#34;&gt;status&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git status
+git status -s
+git status --short
+git add README
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;diff&#34;&gt;diff&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git diff
+git diff --staged
+git diff --cached
+# --staged and --cached are synonyms
+git difftool
+git difftool --tool-help
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;commit&#34;&gt;commit&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git commit
+git commit -v
+git commit -m &#39;commit msg&#39;
+git commit -a
+git commit -a -m &#39;commit msg&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;undo&#34;&gt;undo&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git commit -m &#39;msg&#39;
+git add forgotten_file
+git commit --amend
+
+git reset HEAD staged_file
+
+git checkout modified_file
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;move-and-delete&#34;&gt;move and delete&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git rm file
+git rm --cached file # remove only from stage
+git rm \*~
+git mv file1 file2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;log&#34;&gt;log&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git log
+git log --stat # see commit stats
+git log --shortstat
+git log --graph
+git log --abbrev-commit
+git log --name-status
+git log --name-only
+git log -p # print diff
+git log --oneline --decorate
+git log --oneline --decorate --graph --all
+
+git log -2 # limit to last 2 commits
+git log --after=2.weeks # --since, --after
+git log --before=2.weeks # --until, --before
+git log --since=2008-01-15
+git log --author=name
+git log --commiter=name
+git log -Sfunction_name # grep added/removed code
+git log --grep pattern # grep commit message
+
+git log --pretty=oneline
+git log --pretty=short
+git log --pretty=full
+git log --pretty=fuller
+git log --pretty=format:&amp;quot;%h - %an, %ar : %s&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;pretty log options:
+* %H Commit hash
+* %h Abbreviated commit hash
+* %T Tree hash
+* %t Abbreviated tree hash
+* %P Parent hashes
+* %p Abbreviated parent hashes
+* %an Author name
+* %ae Author email
+* %ad Author date (format respects the &amp;ndash;date=option)
+* %ar Author date, relative
+* %cn Committer name
+* %ce Committer email
+* %cd Committer date
+* %cr Committer date, relative
+* %s Subject&lt;/p&gt;
+
+&lt;h2 id=&#34;remotes&#34;&gt;remotes&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git remote
+git remote -v
+git remote show remote_name
+git remote add remote_name remote_url
+git remote rename old_remote_name new_remote_name
+git remote rm remote_name
+
+git fetch remote_name
+git fetch --all
+git pull # fetch and merge (from server you originally clone from)
+git push remote_name branch_name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;tags&#34;&gt;tags&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git tag
+git tag -l &amp;quot;v1.8.5*&amp;quot; # grep tags
+
+# create anotated tag
+git tag -a v1.4 -m &amp;quot;my version 1.4&amp;quot;
+git show v1.4
+
+# create tag into history
+git log --pretty=oneline
+git tag -a v1.2 9fceb02
+
+# create lightweight tag
+git tag v1.4-lw
+
+# tags are not pushed by default, need to do it explicitly
+git push origin v1.4
+git push origin --tags
+
+git checkout -b branch_name tag_name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;branch&#34;&gt;branch&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git branch
+git branch -v # see last commit
+git branch --merged
+git branch ---no-merged
+
+git branch new_branch_name
+git checkout new_branch_name
+
+git checkout -b new_branch_name
+
+git checkout master
+git merge new_branch_name
+
+git branch -d new_branch_name
+git branch -D new_branch_name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;remote-branches&#34;&gt;remote branches&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git ls-remote
+git ls-remote [remote]
+git remote show [remote]
+
+git checkout -b br1 origin/br1
+# or
+git checkout --track origin/br1
+# or
+git checkout br1
+
+git checkout -b different_br_name origin/br1
+
+# set existing branch to track remote branch`
+git branch -u origin/serverfix
+
+git branch -vv # see tracking branches info
+
+# delete remote branch
+git push origin --delete br1
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>sed</title>
+      <link>https://danielkraic.github.io/2016/07/27/sed/</link>
+      <pubDate>Wed, 27 Jul 2016 20:22:23 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/07/27/sed/</guid>
+      <description>
+
+&lt;h1 id=&#34;sed&#34;&gt;sed&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# range of lines
+sed -n &#39;5,10p&#39; myfile.txt
+
+# all lines except given range
+sed &#39;20,35d&#39; myfile.txt
+
+# non-consecutive lines and ranges
+sed -n -e &#39;5,7p&#39; -e &#39;10,13p&#39; myfile.txt
+
+# replace
+sed &#39;s/version/story/g&#39; myfile.txt
+sed &#39;s/version/story/gi&#39; myfile.txt
+ip route show | sed &#39;s/  */ /g&#39;
+sed &#39;s/[Zz]ip/rar/g&#39; myfile.txt
+sed -i &#39;s/that/this/gi;s/line/verse/gi&#39; myfile.txt
+
+# replace in range
+sed &#39;30,40 s/version/story/g&#39; myfile.txt
+
+# remove emty lines or comments (in apache config)
+sed &#39;/^#\|^$\| *#/d&#39; httpd.conf
+
+# dos2unix
+sed -i &#39;s/\r//&#39; myfile.txt
+
+# in-place editing with backup
+sed -i&#39;.orig&#39; &#39;s/this/that/gi&#39; myfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CPP variant</title>
+      <link>https://danielkraic.github.io/2016/05/27/cpp-variant/</link>
+      <pubDate>Fri, 27 May 2016 10:34:00 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/05/27/cpp-variant/</guid>
+      <description>
+
+&lt;h1 id=&#34;variants&#34;&gt;Variants&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;resembles union&lt;/li&gt;
+&lt;li&gt;able to store values of different types in a boost::variant variable&lt;/li&gt;
+&lt;li&gt;at any point only one value can be stored&lt;/li&gt;
+&lt;li&gt;When a new value is assigned, the old value is overwritten&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;boost::variant&amp;lt;double, char, std::string&amp;gt; v;
+v = 3.14;
+std::cout &amp;lt;&amp;lt; boost::get&amp;lt;double&amp;gt;(v) &amp;lt;&amp;lt; &#39;\n&#39;;
+v = &#39;A&#39;;
+std::cout &amp;lt;&amp;lt; boost::get&amp;lt;char&amp;gt;(v) &amp;lt;&amp;lt; &#39;\n&#39;;
+v = &amp;quot;Boost&amp;quot;;
+std::cout &amp;lt;&amp;lt; boost::get&amp;lt;std::string&amp;gt;(v) &amp;lt;&amp;lt; &#39;\n&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;motivation&#34;&gt;Motivation&lt;/h2&gt;
+
+&lt;h3 id=&#34;example-1&#34;&gt;Example 1&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;before&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class PersonId {
+public:
+  std::string getName();
+  int getJohnDoeId();
+  // etc.
+private:
+  bool m_hasName;
+  std::string m_name;
+  int m_johnDoeId;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;after&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;using PersonId = variant&amp;lt;std::string, int&amp;gt;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;example-2&#34;&gt;Example 2&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;before&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct command {
+  enum type { SET_SCORE, FIRE_MISSILE, FIRE_LASER, ROTATE };
+  virtual type getType();
+};
+struct set_score : commmand {
+  type getType() { return SET_SCORE; } override final;
+  double value;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;after&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct set_score {
+  double value;
+};
+using command = variant&amp;lt;set_score, fire_missile, fire_laser, rotate&amp;gt;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;timeline&#34;&gt;Timeline&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;2004 - Boost.Variant released in Boost 1.31.0.&lt;/li&gt;
+&lt;li&gt;2016 - std::variant recommended for C++17 by LEWG.&lt;/li&gt;
+&lt;li&gt;2020 - Language-based variants in C++20?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;boost-variant&#34;&gt;boost::variant&lt;/h2&gt;
+
+&lt;h4 id=&#34;creation-and-assignment&#34;&gt;Creation and Assignment&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Default constructs to first alternative.
+boost::variant&amp;lt;std::string, int&amp;gt; v;
+// Assignment to alternative types.
+v = 3;
+v = &amp;quot;Hello World&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;extract-a-value-with-get&#34;&gt;Extract a Value with get&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;void output(const boost::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  if(std::string const * const s = boost::get&amp;lt;std::string&amp;gt;(&amp;amp;v))
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; *s &amp;lt;&amp;lt; std:endl;
+  else
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; boost::get&amp;lt;int&amp;gt;(v) &amp;lt;&amp;lt; std:endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;extract-a-value-with-a-visitor&#34;&gt;Extract a Value with a visitor&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct OutputVisitor
+{
+  using result_type = void;
+  void operator()(const std::string&amp;amp; s) const {
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; s &amp;lt;&amp;lt; std:endl;
+  }
+  void operator()(const int i) const {
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; i &amp;lt;&amp;lt; std:endl;
+  }
+};
+void output(const boost::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  boost::apply_visitor(OutputVisitor(), v);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;std-variant&#34;&gt;std::variant&lt;/h2&gt;
+
+&lt;h4 id=&#34;change-1-apply-visitor-renamed&#34;&gt;Change 1: apply_visitor renamed&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct OutputVisitor
+{
+  void operator()(const std::string&amp;amp; s) const {
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; s &amp;lt;&amp;lt; std:endl;
+  }
+  void operator()(const int i) const {
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; i &amp;lt;&amp;lt; std:endl;
+  }
+};
+void output(const std::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  std::visit(OutputVisitor(), v);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;void output(const std::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  return std::visit(
+    std::overload(
+      [](const std::string &amp;amp; s) {  
+        std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; s &amp;lt;&amp;lt; std:endl;
+      },
+      [](const int i) {  
+        std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; i &amp;lt;&amp;lt; std:endl;
+      } ),
+    v );
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;change-2-get-reworked&#34;&gt;Change 2: get reworked&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;void output(const std::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  if(std::string const * const s = std::get_if&amp;lt;std::string&amp;gt;(&amp;amp;v))
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; *s &amp;lt;&amp;lt; std:endl;
+  else
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; std::get&amp;lt;int&amp;gt;(v) &amp;lt;&amp;lt; std:endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;change-3-index-based-access&#34;&gt;Change 3: index-based access.&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;void output(const std::variant&amp;lt;std::string, int&amp;gt;&amp;amp; v)
+{
+  if(std::string const * const s = std::get_if&amp;lt;0&amp;gt;(&amp;amp;v))
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got a string: &amp;quot; &amp;lt;&amp;lt; *s &amp;lt;&amp;lt; std:endl;
+  else
+    std::cout &amp;lt;&amp;lt; &amp;quot;I got an int: &amp;quot; &amp;lt;&amp;lt; std::get&amp;lt;1&amp;gt;(v) &amp;lt;&amp;lt; std:endl;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;language-support-for-variant&#34;&gt;Language support for variant.&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;lvariant command {
+  std::size_t    set_score;    // Set the score to value.
+  std::monostate fire_missile; // Fire a missile.
+  unsigned       fire_laser;   // Fire a laser with the specified
+                               // intensity.
+  double         rotate;       // Rotate the ship by the specified
+                               // degrees.
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;lvariant json_value {
+  std::map&amp;lt;std::string, json_value&amp;gt; object;
+  std::vector&amp;lt;json_value&amp;gt; array;
+  std::string string;
+  double number;
+  bool boolean;
+  std::monostate null_;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;creation-of-alternatives&#34;&gt;Creation of Alternatives&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Create a new command &#39;cmd&#39; that sets the score to &#39;10&#39;.
+command cmd = command::set_score( 10 );
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;basic-pattern-matching&#34;&gt;Basic Pattern Matching&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;// Output a human readable string corresponding to the specified &#39;cmd&#39;
+// command to the specified &#39;stream&#39;.
+std::ostream&amp;amp; operator&amp;lt;&amp;lt;( std::ostream&amp;amp; stream, const command cmd ) {
+  inspect( cmd ) {
+    set_score value =&amp;gt;
+      stream &amp;lt;&amp;lt; &amp;quot;Set the score to &amp;quot; &amp;lt;&amp;lt; value &amp;lt;&amp;lt; &amp;quot;.\n&amp;quot;;
+    fire_missile m =&amp;gt;
+      stream &amp;lt;&amp;lt; &amp;quot;Fire a missile.\n&amp;quot;;
+    fire_laser intensity =&amp;gt;
+      stream &amp;lt;&amp;lt; &amp;quot;Fire a laser with &amp;quot; &amp;lt;&amp;lt; intensity &amp;lt;&amp;lt; &amp;quot; intensity.\n&amp;quot;;
+    rotate degrees =&amp;gt;:
+      stream &amp;lt;&amp;lt; &amp;quot;Rotate by &amp;quot; &amp;lt;&amp;lt; degrees &amp;lt;&amp;lt; &amp;quot; degrees.\n&amp;quot;;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Boost DI</title>
+      <link>https://danielkraic.github.io/2016/05/27/boost-di/</link>
+      <pubDate>Fri, 27 May 2016 10:33:23 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/05/27/boost-di/</guid>
+      <description>
+
+&lt;h1 id=&#34;boost-di&#34;&gt;Boost::DI&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;C++14 header only Dependency Injection library with no dependencies&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;dependency-injection-di&#34;&gt;Dependency Injection (DI)&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
+
+&lt;h3 id=&#34;no-dependency-injection&#34;&gt;No dependency injection&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class coffee_maker {
+public:
+  // create dependencies in the constructor
+  coffee_maker()
+  : heater(std::make_shared&amp;lt;electric_heater&amp;gt;())
+  , pump(std::make_unique&amp;lt;heat_pump&amp;gt;(heater))
+  { }
+  void brew() {
+    heater-&amp;gt;on();
+    pump-&amp;gt;pump();
+  }
+private:
+  std::shared_ptr&amp;lt;iheater&amp;gt; heater;
+  std::unique_ptr&amp;lt;ipump&amp;gt; pump;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;dependency-injection&#34;&gt;Dependency injection&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class coffee_maker {
+public:
+  // inject dependencies via constructor
+  coffee_maker(std::shared_ptr&amp;lt;iheater&amp;gt; heater, std::unique_ptr&amp;lt;ipump&amp;gt; pump)
+  : heater(heater), pump(std::move(pump))
+  { }
+  void brew() {
+    heater-&amp;gt;on();
+    pump-&amp;gt;pump();
+  }
+private:
+  std::shared_ptr&amp;lt;iheater&amp;gt; heater;
+  std::unique_ptr&amp;lt;ipump&amp;gt; pump;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;motivation&#34;&gt;Motivation&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;DI provides loosely coupled code (separation of business logic and object creation)&lt;/li&gt;
+&lt;li&gt;DI provides easier to maintain code (different objects might be easily injected)&lt;/li&gt;
+&lt;li&gt;DI provides easier to test code (fakes objects might be injected)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;examples&#34;&gt;Examples&lt;/h2&gt;
+
+&lt;h4 id=&#34;example-1&#34;&gt;Example 1&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;app&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct renderer { int device; };
+class iview {
+public:
+virtual ~iview() = default;
+virtual void update() = 0;
+};
+class model {};
+class controller {
+public:
+controller(model&amp;amp;, view&amp;amp;) {}
+};
+class user {};
+class app {
+public:
+app(controller&amp;amp;, user&amp;amp;) {}
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;usual approach to create app&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;renderer renderer_;
+view view_{&amp;quot;title&amp;quot;, renderer_};
+model model_;
+controller controller_{model_, view_};
+user user_;
+app app_{controller_, user_};
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;create app with boost::di&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;auto app = di::make_injector().create&amp;lt;app&amp;gt;();
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;example-2&#34;&gt;Example 2&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class controller;
+
+struct renderer {
+  int device;
+};
+
+class view {
+ public:
+  view(std::string /*title*/, const renderer&amp;amp;) {}
+};
+
+class model {};
+class user {};
+
+class app {
+ public:
+  app(controller&amp;amp;, user&amp;amp;) {}
+};
+
+/// CREATE OBJECTS TREE
+class controller {
+ public:
+  controller(model&amp;amp;, view&amp;amp;) {}
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;int main() {
+  /// NO DEPENDENCY INJECTION
+  {
+    renderer renderer_;
+    view view_{&amp;quot;&amp;quot;, renderer_};
+    model model_;
+    controller controller_{model_, view_};
+    user user_;
+    app app_{controller_, user_};
+    (void)app_;
+  }
+
+  /// DEPENDENCY INJECTION
+  {
+    auto injector = di::make_injector();
+    auto app_ = injector.create&amp;lt;app&amp;gt;();
+    (void)app_;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;/// CHANGE CONTROLLER CONSTRUCTOR ORDER
+class controller {
+ public:
+  controller(view&amp;amp;, model&amp;amp;) {}
+};
+
+int main() {
+  /// NO DEPENDENCY INJECTION
+  {
+  renderer renderer_;
+  view view_{&amp;quot;&amp;quot;, renderer_};
+  model model_;
+  //controller controller_{model_, view_};
+  controller controller_{view_, model_}; /// CHANGE
+  user user_;
+  app app_{controller_, user_};
+  (void)app_;
+  }
+
+  /// DEPENDENCY INJECTION
+  {
+  auto injector = di::make_injector();
+  auto app_ = injector.create&amp;lt;app&amp;gt;();
+  (void)app_;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;/// ADD A NEW DEPENDENCY TO CONTROLLER
+struct configuration {};
+class controller {
+ public:
+  controller(view&amp;amp;, model&amp;amp;, configuration) {}
+};
+
+int main() {
+  /// NO DEPENDENCY INJECTION
+  {
+  renderer renderer_;
+  view view_{&amp;quot;&amp;quot;, renderer_};
+  model model_;
+  //controller controller_{model_, view_};
+  controller controller_{view_, model_, configuration{}}; /// CHANGE
+  user user_;
+  app app_{controller_, user_};
+  (void)app_;
+  }
+
+  /// DEPENDENCY INJECTION
+  {
+  auto injector = di::make_injector();
+  auto app_ = injector.create&amp;lt;app&amp;gt;();
+  (void)app_;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;bindings&#34;&gt;Bindings&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;interfaces&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;class iview {
+public:
+  virtual ~iview() noexcept = default;
+  virtual void update() =0;
+};
+
+class gui_view: public iview {
+public:
+  gui_view(std::string title, const renderer&amp;amp;) {}
+  void update() override {}
+};
+
+class text_view: public iview {
+public:
+  void update() override {}
+};
+
+auto injector = di::make_injector(
+  di::bind&amp;lt;iview&amp;gt;.to&amp;lt;gui_view&amp;gt;() // bind interface to implementation
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;struct T { // create using uniform initialization
+  int&amp;amp; a;  // might be used to serialize
+  double b;
+};
+
+auto i = 42;
+auto injector = di::make_injector(
+  di::bind&amp;lt;int&amp;gt;.to(i),
+  di::bind&amp;lt;double&amp;gt;.to(87.0)
+);
+injector.create&amp;lt;T&amp;gt;(); // will create T{i, 87.0};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;auto use_gui_view = true/false;
+
+auto injector = di::make_injector(
+  di::bind&amp;lt;iview&amp;gt;.to([&amp;amp;](const auto&amp;amp; injector) -&amp;gt; iview&amp;amp; {
+    return use_gui_view ?
+      injector.template create&amp;lt;gui_view&amp;amp;&amp;gt;() :
+      injector.template create&amp;lt;text_view&amp;amp;&amp;gt;();
+  })
+);
+
+use_gui_view = true;
+assert(dynamic_cast&amp;lt;gui_view*&amp;gt;(
+  injector.create&amp;lt;std::unique_ptr&amp;lt;iview&amp;gt;().get())
+);
+
+use_gui_view = false;
+assert(dynamic_cast&amp;lt;text_view*&amp;gt;(
+  injector.create&amp;lt;std::unique_ptr&amp;lt;iview&amp;gt;().get())
+);
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>GDB</title>
+      <link>https://danielkraic.github.io/2016/05/24/gdb/</link>
+      <pubDate>Tue, 24 May 2016 10:30:00 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/05/24/gdb/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;http://www.root.cz/clanky/trasovani-a-ladeni-nativnich-aplikaci-v-linuxu-pouziti-gdb-a-jeho-nadstaveb/&#34;&gt;http://www.root.cz/clanky/trasovani-a-ladeni-nativnich-aplikaci-v-linuxu-pouziti-gdb-a-jeho-nadstaveb/&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gdb program
+gdb program core
+gdb program 1234
+
+help
+
+q
+
+shell date
+!date
+
+set logging on
+set logging off
+set logging file file # default logfile is gdb.txt.
+
+info program
+info functions
+info sources
+info sharedlibrary
+
+list
+list main
+list 1,12
+
+search regex
+reverse-search regex
+
+run
+
+break main
+clear main
+info breakpoints
+
+n
+c
+
+print(i)
+print(argc&amp;gt;0)
+print(atoi(&amp;quot;42&amp;quot;))
+print(isdigit(&#39;4&#39;))
+print(isdigit(&#39;a&#39;))
+
+bt
+
+ulimit -c unlimited
+./npe
+Segmentation fault (core dumped)
+
+gdb npe core
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Selinux</title>
+      <link>https://danielkraic.github.io/2016/01/25/selinux/</link>
+      <pubDate>Mon, 25 Jan 2016 20:24:11 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/01/25/selinux/</guid>
+      <description>
+
+&lt;h1 id=&#34;selinux&#34;&gt;Selinux&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ls -Z ~/.bashrc
+#unconfined_u:object_r:user_home_t:s0
+# user:  unconfined_u
+# role:  object_r
+# type:  user_home_t
+# level: s0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;states-and-modes&#34;&gt;states and modes&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;getenforce
+#Enforcing
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;setenforce 0
+getenforce
+#Permissive
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;setenforce 1
+getenforce
+#Enforcing
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;status&#34;&gt;status&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sestatus
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;semanage&#34;&gt;semanage&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;SELinux Policy Management tool&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;semanage login -l
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;seinfo - SELinux policy query tool&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;seinfo -r # list roles
+seinfo -b | grep http | grep cgi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;SELinux contexts for running processes&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ps -eZ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;SELinux context associated with your Linux user&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;id -Z
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;chcon&#34;&gt;chcon&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;change file SELinux security context&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;chcon -t samba_share_t /var/www/html/testfile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;make http unconfined (not using selinux labels)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ls -Z /usr/sbin/httpd
+chcon -t unconfined_exec_t /usr/sbin/httpd
+ls -Z /usr/sbin/httpd
+#restore
+restorecon -v /usr/sbin/httpd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;useradd newuser 
+passwd newuser 
+id -Z
+userdel -r newuser
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;config&#34;&gt;config&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;vim /etc/selinux/config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;booleans&#34;&gt;booleans&lt;/h2&gt;
+
+&lt;h3 id=&#34;list&#34;&gt;list&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;semanage boolean -l
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;get&#34;&gt;get&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;getsebool -a
+getsebool allow_console_login
+getsebool allow_console_login allow_cvs_read_shadow allow_daemons_dump_core
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;set&#34;&gt;set&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;getsebool httpd_can_network_connect_db
+setsebool httpd_can_network_connect_db on
+setsebool -P httpd_can_network_connect_db on # make changes persistent across reboots
+getsebool httpd_can_network_connect_db
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;labelig-files&#34;&gt;labelig files&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ls -Z file1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;chcon-1&#34;&gt;chcon&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#changes SELinux context for files (changes do not survive system relabel or restorecon)
+chcon -t type file-name 
+chcon -R -t type directory-name
+chcon -v --type=httpd_sys_content_t /html
+chcon -Rv --type=httpd_sys_content_t /html
+semanage fcontext -a -t httpd_sys_content_t &amp;quot;/html(/.*)?&amp;quot; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -Z file1
+chcon -t httpd_sys_content_t file1
+restorecon -v file1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;ports&#34;&gt;ports&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;semanage port -l | grep http
+semanage port -a -t http_port_t -p tcp 9876
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;audit2allow&#34;&gt;audit2allow&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Create Custom SELinux Policy Module&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;grep smtpd_t /var/log/audit/audit.log | audit2allow -m postgreylocal &amp;gt; postgreylocal.te
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>AWK</title>
+      <link>https://danielkraic.github.io/2016/01/19/awk/</link>
+      <pubDate>Tue, 19 Jan 2016 22:43:51 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/01/19/awk/</guid>
+      <description>
+
+&lt;h1 id=&#34;awk&#34;&gt;AWK&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;FILENAME&lt;/code&gt; : current input file name( do not change variable name)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;FR&lt;/code&gt; : number of the current input line (that is input line 1, 2, 3… so on, do not change variable name)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;NF&lt;/code&gt; : number of fields in current input line (do not change variable name)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;OFS&lt;/code&gt; : output field separator&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;FS&lt;/code&gt; : input field separator&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ORS&lt;/code&gt; : output record separator&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;RS&lt;/code&gt; : input record separator&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# NR, NF
+awk &#39; END { print &amp;quot;Number of records in file is: &amp;quot;, NR } &#39; file.txt
+awk &#39;{ print &amp;quot;Record:&amp;quot;,NR,&amp;quot;has&amp;quot;,NF,&amp;quot;fields&amp;quot; ; }&#39; file.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# FS
+awk -F&#39;:&#39; &#39;{ print $1, $4 ;}&#39; /etc/passwd
+awk &#39; BEGIN {  FS=“:” ; }  { print $1, $4  ; } &#39; /etc/passwd
+awk -F&#39;:&#39; &#39; BEGIN { OFS=&amp;quot;==&amp;gt;&amp;quot; ;} { print $1, $4 ;}&#39; /etc/passwd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# regex
+awk &#39;/localhost/{print}&#39; /etc/hosts
+awk &#39;/l.c/{print}&#39; /etc/hosts
+awk &#39;/l*c/{print}&#39; /etc/hosts
+awk &#39;/[0-9]/{print}&#39; /etc/hosts
+awk &#39;/^fe/{print}&#39; /etc/hosts
+awk &#39;/ab$/{print}&#39; /etc/hosts
+awk &#39;/\$25.00/{print}&#39; deals.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# print
+awk &#39;{print $1 $2 $3 }&#39; file.txt
+awk &#39;{print $1, $2, $3; }&#39; file.txt
+awk &#39;{printf &amp;quot;%-10s %s\n&amp;quot;,$2, $3 }&#39; file.txt
+awk &#39;/^..$/ {print &amp;quot;DVA&amp;quot;, $0} /^...$/ { print &amp;quot;TRI&amp;quot;, $0}&#39; file.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# operators
+awk &#39;$3 &amp;lt;= 30 { print}&#39; file.txt
+awk &#39;$3 &amp;lt;= 30 &amp;amp;&amp;amp; $3 != 0 { print}&#39; file.txt
+awk &#39;$3 &amp;lt;= 30 { print &amp;quot;small&amp;quot; } $3 &amp;gt; 30 { print &amp;quot;large&amp;quot; }&#39; file.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;awk -f file.awk in_file
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Terminator</title>
+      <link>https://danielkraic.github.io/2015/11/18/terminator/</link>
+      <pubDate>Wed, 18 Nov 2015 08:58:16 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/11/18/terminator/</guid>
+      <description>
+
+&lt;h1 id=&#34;terminator&#34;&gt;Terminator&lt;/h1&gt;
+
+&lt;h5 id=&#34;split&#34;&gt;Split&lt;/h5&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+0&lt;/td&gt;
+&lt;td&gt;Split Terminal Horizontally&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+E&lt;/td&gt;
+&lt;td&gt;Split Terminal Vertically&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h5 id=&#34;resize&#34;&gt;Resize&lt;/h5&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Left&lt;/td&gt;
+&lt;td&gt;Resize Left&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Right&lt;/td&gt;
+&lt;td&gt;Resize Right&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Up&lt;/td&gt;
+&lt;td&gt;Resize Up&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Down&lt;/td&gt;
+&lt;td&gt;Resize Down&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;move&#34;&gt;Move&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Alt+Up&lt;/td&gt;
+&lt;td&gt;Move to the Above Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt+Down&lt;/td&gt;
+&lt;td&gt;Move to the Below Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt+Left&lt;/td&gt;
+&lt;td&gt;Move to the Left Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt+Right&lt;/td&gt;
+&lt;td&gt;Move to the Right Terminal&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Tab or Ctrl+Shift+N&lt;/td&gt;
+&lt;td&gt;Move to Next Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Tab or Ctrl+Shift+P&lt;/td&gt;
+&lt;td&gt;Move to Previous Terminal&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Super+R&lt;/td&gt;
+&lt;td&gt;Rotate terminals clockwise&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Super+Shift+R&lt;/td&gt;
+&lt;td&gt;Rotate terminals counter-clockwise&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;clipboard&#34;&gt;Clipboard&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+c&lt;/td&gt;
+&lt;td&gt;Copy a text to clipboard&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+v&lt;/td&gt;
+&lt;td&gt;Paste a text from Clipboard&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;close&#34;&gt;Close&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+w&lt;/td&gt;
+&lt;td&gt;Close the Current Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+q&lt;/td&gt;
+&lt;td&gt;Quit the Terminator&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;view&#34;&gt;View&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+x&lt;/td&gt;
+&lt;td&gt;Maximise terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+z&lt;/td&gt;
+&lt;td&gt;Zoom terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+s&lt;/td&gt;
+&lt;td&gt;Hide/Show Scrollbar&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F11&lt;/td&gt;
+&lt;td&gt;Toggle Full Screen Mode&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+(+)&lt;/td&gt;
+&lt;td&gt;Increase Font size&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+(-­)&lt;/td&gt;
+&lt;td&gt;Decrease Font Size&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+0&lt;/td&gt;
+&lt;td&gt;Reset Font Size to Original&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;tabs-and-windows&#34;&gt;Tabs and windows&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+t&lt;/td&gt;
+&lt;td&gt;Open New Tab&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+i&lt;/td&gt;
+&lt;td&gt;Open New Window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+page_Down&lt;/td&gt;
+&lt;td&gt;Move to Next Tab&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Page_up&lt;/td&gt;
+&lt;td&gt;Move to Previous Tab&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Page_up&lt;/td&gt;
+&lt;td&gt;Move tab left&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+page_Down&lt;/td&gt;
+&lt;td&gt;Move tab right&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;grouping&#34;&gt;Grouping&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Super+g&lt;/td&gt;
+&lt;td&gt;Group all terminals&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Super+t&lt;/td&gt;
+&lt;td&gt;Group terminals in tab&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Super+Shift+g&lt;/td&gt;
+&lt;td&gt;Ungroup all terminals&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Super+Shift+t&lt;/td&gt;
+&lt;td&gt;Ungroup terminals in tab&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+f&lt;/td&gt;
+&lt;td&gt;Search for a Keyword&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;reset&#34;&gt;Reset&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+R&lt;/td&gt;
+&lt;td&gt;Reset Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+G&lt;/td&gt;
+&lt;td&gt;Reset Terminal and Clear Window&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Grep</title>
+      <link>https://danielkraic.github.io/2015/11/12/grep/</link>
+      <pubDate>Thu, 12 Nov 2015 19:41:10 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/11/12/grep/</guid>
+      <description>
+
+&lt;h1 id=&#34;grep&#34;&gt;Grep&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;-i Ignore case
+-v Invert match
+-c Count of matches
+-l File names only
+-n Lines numbers
+-h No file name
+-f Regex from file
+-P Use Perl regex
+-A num
+-B num
+-r Search recursively
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;grep:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;*
+.
+^ $
+[...] [^...]
+\n
+\(...\)
+\{i\} \{i,j\} \{i,\}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;GNU grep:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;\? \+
+\b \B
+\w \W
+\s \S
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;grep -E:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+ ? |
+() {i} {i,j} {i,}
+[:alpha:] space digit lower upper
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;grep -P:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;\d \D \A \Z
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>DNF</title>
+      <link>https://danielkraic.github.io/2015/10/30/dnf/</link>
+      <pubDate>Fri, 30 Oct 2015 18:08:13 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/10/30/dnf/</guid>
+      <description>
+
+&lt;h1 id=&#34;dnf&#34;&gt;DNF&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;package manager in Fedora&lt;/li&gt;
+&lt;li&gt;DNF - Dandified Yum&lt;/li&gt;
+&lt;li&gt;next generation YUM&lt;/li&gt;
+&lt;li&gt;docs: &lt;a href=&#34;http://dnf.readthedocs.org/en/latest/&#34;&gt;http://dnf.readthedocs.org/en/latest/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;command&lt;/th&gt;
+&lt;th&gt;description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;dnf help&lt;/td&gt;
+&lt;td&gt;help&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf install vim&lt;/td&gt;
+&lt;td&gt;install pkg&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf reinstall vim&lt;/td&gt;
+&lt;td&gt;reinstall pkg&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf remove vim # or erase&lt;/td&gt;
+&lt;td&gt;remove pkg&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf check-update&lt;/td&gt;
+&lt;td&gt;check system updates&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf update vim&lt;/td&gt;
+&lt;td&gt;update pkg&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf update # or upgrade&lt;/td&gt;
+&lt;td&gt;update all pkgs&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf search vim&lt;/td&gt;
+&lt;td&gt;search pkg&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf info&lt;/td&gt;
+&lt;td&gt;show pkg info&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf provides /bin/bash&lt;/td&gt;
+&lt;td&gt;find pks which provides file&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf list installed&lt;/td&gt;
+&lt;td&gt;list all installed pkgs&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf list available&lt;/td&gt;
+&lt;td&gt;list all available pkgs&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf autoremove&lt;/td&gt;
+&lt;td&gt;remove no-longer-needed pkgs&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf clean all&lt;/td&gt;
+&lt;td&gt;clean caches&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf history&lt;/td&gt;
+&lt;td&gt;view history&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf repolist&lt;/td&gt;
+&lt;td&gt;list all enabled repos&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf repolist all&lt;/td&gt;
+&lt;td&gt;list all enabled ans disabled repos&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf grouplist&lt;/td&gt;
+&lt;td&gt;list pkg groups&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf groupinstall &amp;lsquo;LibreOffice&amp;rsquo;&lt;/td&gt;
+&lt;td&gt;install pkg group&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf groupupdate &amp;lsquo;LibreOffice&amp;rsquo;&lt;/td&gt;
+&lt;td&gt;update pkg group&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf groupremove &amp;lsquo;LibreOffice&amp;rsquo;&lt;/td&gt;
+&lt;td&gt;remove pkg group&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf &amp;ndash;enablerepo=epel install phpmyadmin&lt;/td&gt;
+&lt;td&gt;install pkg form specific repo&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf distro-sync&lt;/td&gt;
+&lt;td&gt;sync pkgs to stable release&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf copr enable user/project&lt;/td&gt;
+&lt;td&gt;enable copr repo&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;dnf copr disable user/project&lt;/td&gt;
+&lt;td&gt;disable copr repo&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Vagrant</title>
+      <link>https://danielkraic.github.io/2015/10/26/vagrant/</link>
+      <pubDate>Mon, 26 Oct 2015 19:02:41 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/10/26/vagrant/</guid>
+      <description>
+
+&lt;h2 id=&#34;vagrant&#34;&gt;Vagrant&lt;/h2&gt;
+
+&lt;h3 id=&#34;search-boxes&#34;&gt;Search boxes&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://atlas.hashicorp.com/boxes/search&#34;&gt;atlas.hashicorp.com/boxes/search&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;up-and-running&#34;&gt;Up and running&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir my-project &amp;amp;&amp;amp; cd my-project
+vagrant init hashicorp/precise32
+vagrant up
+vagrant ssh
+vagrant destroy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;commands&#34;&gt;Commands&lt;/h3&gt;
+
+&lt;h4 id=&#34;init&#34;&gt;Init&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# initialize Vagrant environment
+vagrant init [box-name] [box-url]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;up&#34;&gt;Up&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# create and configure guest machines
+vagrant up
+# specify provider (default is virtualbox)
+vagrant up --provider virtualbox
+# force provisioners to run
+vagrant up --provision
+# only run given provisioners
+vagrant up --provision-with shell,chef
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ssh&#34;&gt;SSH&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# SSH into running machine
+vagrant ssh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;ssh-config&#34;&gt;SSH config&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# output valid ssh configuration to SSH into machine
+vagrant ssh-config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;status&#34;&gt;Status&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# print machine state
+vagrant status
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;global-status&#34;&gt;Global status&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# state of all active Vagrant environments
+vagrant global-status
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;halt&#34;&gt;Halt&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# shut down running machine
+vagrant halt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;reload&#34;&gt;Reload&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# equivalent of running halt followed by up
+vagrant reload
+# force provisioners to re-run, provisioners will not run again by default
+vagrant reload --provision
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;resume&#34;&gt;Resume&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# resume machine that was previously suspended
+vagrant resume
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;suspend&#34;&gt;Suspend&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# suspends machine (to resume it later)
+vagrant suspend
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;destroy&#34;&gt;Destroy&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# stop machine and destroy all its resources
+vagrant -f destroy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;version&#34;&gt;Version&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# output vagrant version
+vagrant version
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;provision&#34;&gt;Provision&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# run any configured provisioners
+vagrant provision
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;package&#34;&gt;Package&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# packages currently running VirtualBox environment into a re-usable box
+vagrant package
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;box&#34;&gt;Box&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;vagrant box list
+vagrant box add hashicorp/precise32
+vagrant box remove hashicorp/precise32
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;plugin&#34;&gt;Plugin&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;vagrant plugin install &amp;lt;name&amp;gt;
+vagrant plugin list
+vagrant plugin uninstall &amp;lt;name&amp;gt;
+vagrant plugin update &amp;lt;name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;example&#34;&gt;Example&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+
+  # rsyslog server with RELP enabled
+  config.vm.define :server do |server|
+    server.vm.box = &amp;quot;ubuntu/trusty64&amp;quot;
+
+    server.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 514, host: 10514
+    server.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 20514, host: 20514
+    server.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 20515, host: 20515
+
+    server.vm.provider &amp;quot;virtualbox&amp;quot; do |vb|
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usb&amp;quot;, &amp;quot;off&amp;quot;]
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usbehci&amp;quot;, &amp;quot;off&amp;quot;]
+    end
+
+    server.vm.provision :ansible do |ansible|
+      ansible.playbook = &amp;quot;ansible/setup-server.yml&amp;quot;
+      ansible.host_key_checking = false
+      ansible.verbose = &amp;quot;v&amp;quot;
+    end
+  end
+
+  # rsyslog client with RELP enabled
+  config.vm.define :client do |client|
+    client.vm.box = &amp;quot;ubuntu/trusty64&amp;quot;
+
+    client.vm.provider &amp;quot;virtualbox&amp;quot; do |vb|
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usb&amp;quot;, &amp;quot;off&amp;quot;]
+      vb.customize [&amp;quot;modifyvm&amp;quot;, :id, &amp;quot;--usbehci&amp;quot;, &amp;quot;off&amp;quot;]
+    end
+
+    client.vm.provision :ansible do |ansible|
+      ansible.playbook = &amp;quot;ansible/setup-client.yml&amp;quot;
+      ansible.host_key_checking = false
+      ansible.verbose = &amp;quot;v&amp;quot;
+    end
+  end
+e
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Docker</title>
+      <link>https://danielkraic.github.io/2015/10/19/docker/</link>
+      <pubDate>Mon, 19 Oct 2015 22:50:24 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/10/19/docker/</guid>
+      <description>
+
+&lt;h2 id=&#34;docker&#34;&gt;Docker&lt;/h2&gt;
+
+&lt;h3 id=&#34;about&#34;&gt;About&lt;/h3&gt;
+
+&lt;p&gt;Docker allows you to package an application with all of its dependencies into a standardized unit for software development.&lt;/p&gt;
+
+&lt;p&gt;Docker containers wrap up a piece of software in a complete filesystem that contains everything it needs to run: code, runtime, system tools, system libraries – anything you can install on a server. This guarantees that it will always run the same, regardless of the environment it is running in.&lt;/p&gt;
+
+&lt;h5 id=&#34;docker-is-lightweight&#34;&gt;Docker is lightweight&lt;/h5&gt;
+
+&lt;p&gt;Containers running on a single machine all share the same operating system kernel so they start instantly and make more efficient use of RAM. Images are constructed from layered filesystems so they can share common files, making disk usage and image downloads much more efficient.&lt;/p&gt;
+
+&lt;h5 id=&#34;docker-is-secure&#34;&gt;Docker is secure&lt;/h5&gt;
+
+&lt;p&gt;Containers isolate applications from each other and the underlying infrastructure while providing an added layer of protection for the application.&lt;/p&gt;
+
+&lt;h4 id=&#34;docker-vs-vm&#34;&gt;Docker vs VM&lt;/h4&gt;
+
+&lt;p&gt;How is this different from virtual machines?
+Containers have similar resource isolation and allocation benefits as virtual machines but a different architectural approach allows them to be much more portable and efficient.&lt;/p&gt;
+
+&lt;h5 id=&#34;virtual-machines&#34;&gt;Virtual Machines&lt;/h5&gt;
+
+&lt;p&gt;Each virtual machine includes the application, the necessary binaries and libraries and an entire guest operating system - all of which may be tens of GBs in size.&lt;/p&gt;
+
+&lt;h5 id=&#34;containers&#34;&gt;Containers&lt;/h5&gt;
+
+&lt;p&gt;Containers include the application and all of its dependencies, but share the kernel with other containers. They run as an isolated process in userspace on the host operating system. Docker uses resource isolation features of the Linux kernel such as cgroups and kernel namespaces to allow independent &amp;ldquo;containers&amp;rdquo; to run within a single Linux instance, avoiding the overhead of starting and maintaining virtual machines. They’re also not tied to any specific infrastructure – Docker containers run on any computer, on any infrastructure and in any cloud.&lt;/p&gt;
+
+&lt;h3 id=&#34;build-ship-run&#34;&gt;Build -&amp;gt; ship -&amp;gt; run&lt;/h3&gt;
+
+&lt;p&gt;Build – build docker container application and all of its dependencies
+Ship – push container to public/private docker repository
+Run – pull container from repository a run it&lt;/p&gt;
+
+&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+
+&lt;h4 id=&#34;create&#34;&gt;Create&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker create -i -t --name my_fedora fedora:22 bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;-i  Interactive mode (keeps the STDIN open for interaction with the container)&lt;/li&gt;
+&lt;li&gt;-t  Allocates a pseudo-TTY&lt;/li&gt;
+&lt;li&gt;&amp;ndash;name  Name of the container. If not specified, docker will add a hash string as a name.&lt;/li&gt;
+&lt;li&gt;fedora:22  Image to be instantiated.&lt;/li&gt;
+&lt;li&gt;bash  The command (process) to be run inside the container.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker start -a -i my_fedora
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;-a  Attach to the pseudo-TTY&lt;/li&gt;
+&lt;li&gt;-i  Interactive mode (keeps the STDIN open for interaction with the container)&lt;/li&gt;
+&lt;li&gt;&amp;ndash;name  Name of the container.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;create-start-run&#34;&gt;Create + Start = Run&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run hello-world
+docker run docker/whalesay cowsay &#39;hello form docker&#39;
+docker run maryatdocker/docker-whale
+# Interactive
+docker run -i -t --name my_fedora fedora:22 /bin/bash
+# Deamon
+docker run -d --name MySQL mysql:5.7 /opt/mysql/mysqld
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;expose-ports&#34;&gt;Expose ports&lt;/h4&gt;
+
+&lt;p&gt;To expose a specific port use the -p switch. The port 80 inside the container is mapped to the outside as 8080.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run -d -p 8080:80 --name web nginx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To prevent conflicts between multiple containers, the -P switch tells docker to map ports inside containers to random ports outside the container.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run -d -P --name web nginx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;attach-data&#34;&gt;Attach data&lt;/h4&gt;
+
+&lt;p&gt;Exposing /var/www as /usr/share/nginx/html inside the container, which is where nginx stores static content in default setting.
+:ro  Read only permission&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run --name web -p 80:80 -d -v /var/www:/usr/share/nginx/html:ro nginx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;control-containers&#34;&gt;Control containers&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker ps
+docker ps -a
+docker ps -a --filter &#39;exited=0&#39;
+docker stop my_fedora
+docker kill my_fedora
+docker rm my_fedora
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;control-images&#34;&gt;Control images&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# default repository: hub.docker.com
+docker search nginx
+docker pull nginx
+docker pull debian:squeeze
+docker pull 172.16.0.1/username/image_name[:tag]
+docker images
+docker rmi -f nginx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;nginx-static-website&#34;&gt;Nginx static website&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;echo &#39;hello from docker&#39; &amp;gt; index.html
+docker run --name bal-nginx -p 8080:80 -v `pwd`:/usr/share/nginx/html:ro -d nginx
+docker run --name web -p 80:80 -d -v /var/www:/usr/share/nginx/html:ro,Z nginx
+lynx http://localhost:8080
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;inspect-containers&#34;&gt;Inspect containers&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker inspect CONTAINER|IMAGE
+docker inspect CONTAINER | grep IPAddress
+docker logs CONTAINER
+docker top my_fedora
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;env&#34;&gt;ENV&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run -i -t -e VAR1=val1 -e VAR2=val2 fedora:22 bash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;foreman-demo&#34;&gt;Foreman Demo&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run -p 3333:3000 -i -t lzap/fedora-foreman-git-stable:1.3.1
+# http://localhost:3333 (admin/changeme)
+docker run -p 3333:3000 -i -t -entrypoint=&#39;/bin/bash&#39; lzap/fedora-foreman-git-stable:1.3.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;link-containers&#34;&gt;Link containers&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;docker run --name DB -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=admin -d mysql:5.7
+docker run -p 8080:80 -e WORDPRESS_DB_PASSWORD=admin -d --name WP --link DB:mysql wordpress
+http://localhost:8080
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;docker-compose&#34;&gt;Docker Compose&lt;/h4&gt;
+
+&lt;p&gt;Tool for defining and running multi-container applications with Docker:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;define Dockerfile&lt;/li&gt;
+&lt;li&gt;define services that make up your app in docker-compose.yml&lt;/li&gt;
+&lt;li&gt;run docker-compose up&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;cheatsheet&#34;&gt;Cheatsheet&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/wsargent/docker-cheat-sheet&#34;&gt;https://github.com/wsargent/docker-cheat-sheet&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;commands&#34;&gt;Commands&lt;/h2&gt;
+
+&lt;h3 id=&#34;containers-1&#34;&gt;Containers&lt;/h3&gt;
+
+&lt;h4 id=&#34;lifecycle&#34;&gt;Lifecycle&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;docker create&lt;/td&gt;
+&lt;td&gt;creates a container but does not start it&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker run&lt;/td&gt;
+&lt;td&gt;creates and starts a container in one operation&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker stop&lt;/td&gt;
+&lt;td&gt;stops it&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker start&lt;/td&gt;
+&lt;td&gt;will start it again&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker restart&lt;/td&gt;
+&lt;td&gt;restarts a container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker rm&lt;/td&gt;
+&lt;td&gt;deletes a container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker kill&lt;/td&gt;
+&lt;td&gt;sends a SIGKILL to a container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker attach&lt;/td&gt;
+&lt;td&gt;will connect to a running container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker wait&lt;/td&gt;
+&lt;td&gt;blocks until container stops&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;info&#34;&gt;Info&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;docker ps&lt;/td&gt;
+&lt;td&gt;shows running containers&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker logs&lt;/td&gt;
+&lt;td&gt;gets logs from container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker inspect&lt;/td&gt;
+&lt;td&gt;looks at all the info on a container (including IP address)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker events&lt;/td&gt;
+&lt;td&gt;gets events from container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker port&lt;/td&gt;
+&lt;td&gt;shows public facing port of container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker top&lt;/td&gt;
+&lt;td&gt;shows running processes in container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker stats&lt;/td&gt;
+&lt;td&gt;shows containers&amp;rsquo; resource usage statistics&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker diff&lt;/td&gt;
+&lt;td&gt;shows changed files in the container&amp;rsquo;s FS&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;images&#34;&gt;Images&lt;/h3&gt;
+
+&lt;h4 id=&#34;lifecycle-1&#34;&gt;Lifecycle&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;docker images&lt;/td&gt;
+&lt;td&gt;shows all images&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker import&lt;/td&gt;
+&lt;td&gt;creates an image from a tarball&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker build&lt;/td&gt;
+&lt;td&gt;creates image from Dockerfile&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker commit&lt;/td&gt;
+&lt;td&gt;creates image from a container&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker rmi&lt;/td&gt;
+&lt;td&gt;removes an image&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker load&lt;/td&gt;
+&lt;td&gt;loads an image from a tar archive as STDIN, including images an tags (as of 0.7)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker save&lt;/td&gt;
+&lt;td&gt;saves an image to a tar archive stream to STDOUT with all parent layers, tags &amp;amp; versions (as of 0.7)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;info-1&#34;&gt;Info&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;docker history&lt;/td&gt;
+&lt;td&gt;shows history of image&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker tag&lt;/td&gt;
+&lt;td&gt;tags an image to a name (local or registry)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;registry-repository&#34;&gt;Registry &amp;amp; Repository&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;docker login&lt;/td&gt;
+&lt;td&gt;to login to a registry&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker search&lt;/td&gt;
+&lt;td&gt;searches registry for image&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker pull&lt;/td&gt;
+&lt;td&gt;pulls an image from registry to local machine&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;docker push&lt;/td&gt;
+&lt;td&gt;pushes an image to the registry from local machine&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Qt Creator</title>
+      <link>https://danielkraic.github.io/2015/09/30/qt-creator/</link>
+      <pubDate>Wed, 30 Sep 2015 19:11:33 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/30/qt-creator/</guid>
+      <description>
+
+&lt;h4 id=&#34;window&#34;&gt;Window&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl Shift F11&lt;/td&gt;
+&lt;td&gt;full screen&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt 0&lt;/td&gt;
+&lt;td&gt;show site bar&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt &amp;lt;-&lt;/td&gt;
+&lt;td&gt;go back&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl Tab&lt;/td&gt;
+&lt;td&gt;next window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl Shift Tab&lt;/td&gt;
+&lt;td&gt;previous window&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;locate&#34;&gt;Locate&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl K&lt;/td&gt;
+&lt;td&gt;locate&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F4&lt;/td&gt;
+&lt;td&gt;switch between source/header&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F2&lt;/td&gt;
+&lt;td&gt;follow symbol under cursor&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Shift F2&lt;/td&gt;
+&lt;td&gt;switch between declaration/definition&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl Shift U&lt;/td&gt;
+&lt;td&gt;find usage&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl Shift R&lt;/td&gt;
+&lt;td&gt;rename symbol under cursor&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;bookmarks&#34;&gt;Bookmarks&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl M&lt;/td&gt;
+&lt;td&gt;toogle bookmark&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl .&lt;/td&gt;
+&lt;td&gt;next bookmark&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl ,&lt;/td&gt;
+&lt;td&gt;previous bookmark&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;git&#34;&gt;Git&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt D&lt;/td&gt;
+&lt;td&gt;diff current file&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt L&lt;/td&gt;
+&lt;td&gt;log current file&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt B&lt;/td&gt;
+&lt;td&gt;blame current file&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt Shift D&lt;/td&gt;
+&lt;td&gt;diff project&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt K&lt;/td&gt;
+&lt;td&gt;log project&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt G Alt C&lt;/td&gt;
+&lt;td&gt;commit&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;debug&#34;&gt;Debug&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;F5&lt;/td&gt;
+&lt;td&gt;start debugging/continue&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F10&lt;/td&gt;
+&lt;td&gt;step over&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F11&lt;/td&gt;
+&lt;td&gt;step into&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F9&lt;/td&gt;
+&lt;td&gt;toggle breakpoint&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;build&#34;&gt;Build&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl B&lt;/td&gt;
+&lt;td&gt;build project&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl R&lt;/td&gt;
+&lt;td&gt;run&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;edit&#34;&gt;Edit&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl F&lt;/td&gt;
+&lt;td&gt;find/replace&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl /&lt;/td&gt;
+&lt;td&gt;toggle comment selection&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl L&lt;/td&gt;
+&lt;td&gt;go to line&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt U&lt;/td&gt;
+&lt;td&gt;uppercase&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt Shift U&lt;/td&gt;
+&lt;td&gt;lowercase&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl &amp;lt;&lt;/td&gt;
+&lt;td&gt;fold&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl &amp;gt;&lt;/td&gt;
+&lt;td&gt;unfold&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Screen</title>
+      <link>https://danielkraic.github.io/2015/09/24/screen/</link>
+      <pubDate>Thu, 24 Sep 2015 16:32:52 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/24/screen/</guid>
+      <description>
+
+&lt;h3 id=&#34;shell-commands&#34;&gt;Shell commands&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;screen&lt;/td&gt;
+&lt;td&gt;start screen&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen -S name&lt;/td&gt;
+&lt;td&gt;screate session with name&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen -L&lt;/td&gt;
+&lt;td&gt;start screen and enable logging&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen -ls&lt;/td&gt;
+&lt;td&gt;list pid&amp;rsquo;s of reattached sessions&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen -r&lt;/td&gt;
+&lt;td&gt;reattach session&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen -r 7849&lt;/td&gt;
+&lt;td&gt;reattach session&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen –x&lt;/td&gt;
+&lt;td&gt;attach  to  a not detached screen session&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;screen-commands&#34;&gt;Screen commands&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl a ?&lt;/td&gt;
+&lt;td&gt;help&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a d&lt;/td&gt;
+&lt;td&gt;deattach session&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a c&lt;/td&gt;
+&lt;td&gt;create new window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a n&lt;/td&gt;
+&lt;td&gt;go to next window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a p&lt;/td&gt;
+&lt;td&gt;go to previous window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a Ctrl a&lt;/td&gt;
+&lt;td&gt;jump to most recently visited window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a 4&lt;/td&gt;
+&lt;td&gt;go to window #4&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a w&lt;/td&gt;
+&lt;td&gt;list all windows&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a &amp;ldquo;&lt;/td&gt;
+&lt;td&gt;show navigation menu&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a A&lt;/td&gt;
+&lt;td&gt;rename current window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a x&lt;/td&gt;
+&lt;td&gt;lock session&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a k&lt;/td&gt;
+&lt;td&gt;kill curent window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a &lt;/td&gt;
+&lt;td&gt;kill all windows adn quit&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a K&lt;/td&gt;
+&lt;td&gt;kill session&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a H&lt;/td&gt;
+&lt;td&gt;start/stop logging&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a M&lt;/td&gt;
+&lt;td&gt;monitor window for activity&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a _&lt;/td&gt;
+&lt;td&gt;monitor window for activity (silence or no output)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a S&lt;/td&gt;
+&lt;td&gt;horizontal split&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a |&lt;/td&gt;
+&lt;td&gt;vertical split&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a [tab]&lt;/td&gt;
+&lt;td&gt;move between regions&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a X&lt;/td&gt;
+&lt;td&gt;kill current region&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a Q&lt;/td&gt;
+&lt;td&gt;go back to single region&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

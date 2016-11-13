@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>MongoDB &middot; </title>
+        <meta name="description" content="MongoDB help show dbs show collections show users show roles show profile use &lt;db&gt; coll = db.&lt;collection&gt; coll.find(); operators $eq, $gt, $gte, $lt, $lte, $ne, $in, $nin $and, $or, $not, $nor find db.restaurants.find() db.restaurants.findOne() db.restaurants.find( { &quot;grades.grade&quot;: &quot;B&quot; } ) db.users.find( { name: null } ) db.users.find( { name : { $exists: false } } ) db.users.find( { name : { $type: 10 } } ) db.restaurants.find( { &quot;grades.score&quot;: {">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.17-DEV" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/normalize.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/highlight.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://danielkraic.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="danielkraic">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Gitlab" title="Gitlab" href="danielkraic">
+                                <i class="fa fa-gitlab"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="danielkraic">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="danielkraic">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="danielkraic">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">MongoDB</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2016-09-13" itemprop="datePublished">Tue, Sep 13, 2016</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author"></a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<h1 id="mongodb">MongoDB</h1>
+
+<pre><code>help
+
+show dbs
+show collections
+show users
+show roles
+show profile
+</code></pre>
+
+<pre><code>use &lt;db&gt;
+
+coll = db.&lt;collection&gt;
+coll.find();
+</code></pre>
+
+<h2 id="operators">operators</h2>
+
+<ul>
+<li>$eq, $gt, $gte, $lt, $lte, $ne, $in, $nin</li>
+<li>$and, $or, $not, $nor</li>
+</ul>
+
+<h2 id="find">find</h2>
+
+<pre><code>db.restaurants.find()
+db.restaurants.findOne()
+db.restaurants.find( { &quot;grades.grade&quot;: &quot;B&quot; } )
+</code></pre>
+
+<pre><code>db.users.find( { name: null } )
+db.users.find( { name : { $exists: false } } )
+db.users.find( { name : { $type: 10 } } )
+</code></pre>
+
+<pre><code>db.restaurants.find( { &quot;grades.score&quot;: { $gt: 30 } } )
+db.restaurants.find( { &quot;grades.score&quot;: { $lt: 10 } } )
+//and
+db.restaurants.find( { &quot;cuisine&quot;: &quot;Italian&quot;, &quot;address.zipcode&quot;: &quot;10075&quot; } )
+//or
+db.restaurants.find(
+   { $or: [ { &quot;cuisine&quot;: &quot;Italian&quot; }, { &quot;address.zipcode&quot;: &quot;10075&quot; } ] }
+)
+db.users.find( { status: { $in: [ &quot;P&quot;, &quot;D&quot; ] } } )
+db.users.find( { status: &quot;A&quot;, age: { $lt: 30 } } )
+db.users.find(
+   {
+     status: &quot;A&quot;,
+     $or: [ { age: { $lt: 30 } }, { type: 1 } ]
+   }
+)
+</code></pre>
+
+<h3 id="query-embedded-document">query embedded document</h3>
+
+<pre><code>db.users.find( { &quot;favorites.artist&quot;: &quot;Picasso&quot; } )
+</code></pre>
+
+<h3 id="query-array">query array</h3>
+
+<pre><code>//exact match
+db.users.find( { badges: [ &quot;blue&quot;, &quot;black&quot; ] } )
+//match array element
+db.users.find( { badges: &quot;black&quot; } )
+//match specific array element
+db.users.find( { &quot;badges.0&quot;: &quot;black&quot; } )
+//Multiple Criteria for Array Elements
+db.users.find( { finished: { $elemMatch: { $gt: 15, $lt: 20 } } } )
+// Array of Embedded Documents
+db.users.find( { 'points.0.points': { $lte: 55 } } )
+db.users.find( { 'points.points': { $lte: 55 } } )
+db.users.find( { points: { $elemMatch: { points: { $lte: 70 }, bonus: 20 } } } )
+db.users.find( { &quot;points.points&quot;: { $lte: 70 }, &quot;points.bonus&quot;: 20 } )
+</code></pre>
+
+<h2 id="sort">sort</h2>
+
+<pre><code>db.restaurants.find().sort( { name: 1 } );
+db.restaurants.find().sort( { name: -1 } );
+db.restaurants.find().sort( { &quot;borough&quot;: 1, &quot;address.zipcode&quot;: 1 } )
+</code></pre>
+
+<h2 id="projection">projection</h2>
+
+<pre><code>db.restaurants.find({}, { name:true, restaurant_id:true} )
+db.users.find( { status: &quot;A&quot; }, { name: 1, status: 1, _id: 0 } )
+// return fields of embedded doc
+db.users.find(
+   { status: &quot;A&quot; },
+   { name: 1, status: 1, &quot;favorites.food&quot;: 1 }
+)
+// return all but excluded
+db.users.find( { status: &quot;A&quot; }, { favorites: 0, points: 0 } )
+// return  Specific Array Elements
+db.users.find( { status: &quot;A&quot; }, { name: 1, status: 1, points: { $slice: -1 } } )
+</code></pre>
+
+<h2 id="limit">limit</h2>
+
+<pre><code>db.restaurants.find().limit(1)
+</code></pre>
+
+<h2 id="skip">skip</h2>
+
+<pre><code>db.restaurants.find().limit(10)
+</code></pre>
+
+<h2 id="insert">insert</h2>
+
+<pre><code>db.users.insertOne(
+   {
+      name: &quot;sue&quot;,
+      age: 19,
+      status: &quot;P&quot;
+   }
+)
+</code></pre>
+
+<pre><code>db.users.insertMany(
+   [
+     { name: &quot;bob&quot;, age: 42, status: &quot;A&quot;, },
+     { name: &quot;ahn&quot;, age: 22, status: &quot;A&quot;, },
+     { name: &quot;xi&quot;, age: 34, status: &quot;D&quot;, }
+   ]
+)
+</code></pre>
+
+<pre><code>// insert single doc
+db.users.insert(
+   {
+      name: &quot;sue&quot;,
+      age: 19,
+      status: &quot;P&quot;
+   }
+)
+
+// insert multiple docs
+db.users.insert(
+   [
+     { name: &quot;bob&quot;, age: 42, status: &quot;A&quot;, },
+     { name: &quot;ahn&quot;, age: 22, status: &quot;A&quot;, },
+     { name: &quot;xi&quot;, age: 34, status: &quot;D&quot;, }
+   ]
+)
+</code></pre>
+
+<h2 id="update">update</h2>
+
+<ul>
+<li><code>{ upsert : true}</code> - update or insert new</li>
+<li><code>{ multi : true}</code> - update multiple dics</li>
+<li>updateOne</li>
+<li>updateMany</li>
+<li>replaceOne/update</li>
+</ul>
+
+<h3 id="update-operators">update operators</h3>
+
+<ul>
+<li>$inc, $mul, $rename, $setOrInsert, $set, $unset, $min, $max, $currentDate</li>
+</ul>
+
+<pre><code>db.restaurants.update(
+    { &quot;name&quot; : &quot;Juni&quot; },
+    {
+      $set: { &quot;cuisine&quot;: &quot;American (New)&quot; },
+      $currentDate: { &quot;lastModified&quot;: true }
+    }
+)
+</code></pre>
+
+<pre><code>db.restaurants.update(
+  { &quot;restaurant_id&quot; : &quot;41156888&quot; },
+  { $set: { &quot;address.street&quot;: &quot;East 31st Street&quot; } }
+)
+</code></pre>
+
+<h3 id="update-multiple-docs">update multiple docs</h3>
+
+<pre><code>db.restaurants.update(
+  { &quot;address.zipcode&quot;: &quot;10016&quot;, cuisine: &quot;Other&quot; },
+  {
+    $set: { cuisine: &quot;Category To Be Determined&quot; },
+    $currentDate: { &quot;lastModified&quot;: true }
+  },
+  { multi: true}
+)
+</code></pre>
+
+<h3 id="update-array">update array</h3>
+
+<h4 id="elemmatch">$elemMatch</h4>
+
+<pre><code>db.students.update(
+   {
+     _id: 4,
+     grades: { $elemMatch: { grade: { $lte: 90 }, mean: { $gt: 80 } } }
+   },
+   { $set: { &quot;grades.$.std&quot; : 6 } }
+)
+</code></pre>
+
+<h4 id="placeholder">placeholder $</h4>
+
+<pre><code>// positional $ operator acts as a placeholder for the first match of the update query
+db.students.update(
+   { _id: 1, grades: 80 },
+   { $set: { &quot;grades.$&quot; : 82 } }
+)
+db.students.update(
+   { _id: 4, &quot;grades.grade&quot;: 85 },
+   { $set: { &quot;grades.$.std&quot; : 6 } }
+)
+</code></pre>
+
+<h4 id="addtoset">$addToSet</h4>
+
+<pre><code>db.users.update(
+  { letters : { $exists: true } },
+  { $addToSet: { letters: &quot;g&quot; } }
+)
+</code></pre>
+
+<h4 id="each">$each</h4>
+
+<pre><code>db.users.update(
+  { letters : { $exists: true } },
+  { $addToSet: { letters: { $each:[&quot;f&quot;,&quot;e&quot;] } } }
+)
+</code></pre>
+
+<h3 id="replace-doc">replace doc</h3>
+
+<pre><code>db.restaurants.update(
+   { &quot;restaurant_id&quot; : &quot;41704620&quot; },
+   {
+     &quot;name&quot; : &quot;Vella 2&quot;,
+     &quot;address&quot; : {
+              &quot;coord&quot; : [ -73.9557413, 40.7720266 ],
+              &quot;building&quot; : &quot;1480&quot;,
+              &quot;street&quot; : &quot;2 Avenue&quot;,
+              &quot;zipcode&quot; : &quot;10075&quot;
+     }
+   }
+)
+</code></pre>
+
+<h2 id="remove">remove</h2>
+
+<pre><code>db.restaurants.remove( { &quot;borough&quot;: &quot;Manhattan&quot; } )
+db.restaurants.remove( { &quot;borough&quot;: &quot;Queens&quot; }, { justOne: true } )
+//remove all docs
+db.restaurants.remove( { } )
+//drop collection
+db.restaurants.drop()
+</code></pre>
+
+<h2 id="aggregate">aggregate</h2>
+
+<pre><code>db.restaurants.aggregate(
+   [
+     { $group: { &quot;_id&quot;: &quot;$borough&quot;, &quot;count&quot;: { $sum: 1 } } }
+   ]
+);
+db.restaurants.aggregate(
+   [
+     { $match: { &quot;borough&quot;: &quot;Queens&quot;, &quot;cuisine&quot;: &quot;Brazilian&quot; } },
+     { $group: { &quot;_id&quot;: &quot;$address.zipcode&quot; , &quot;count&quot;: { $sum: 1 } } }
+   ]
+);
+</code></pre>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="https://danielkraic.github.io/tags/dev/">dev</a>
+            
+                 <a href="https://danielkraic.github.io/tags/db/">db</a>
+            
+                 <a href="https://danielkraic.github.io/tags/mongo/">mongo</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="https://twitter.com/share?text=MongoDB&url=https%3a%2f%2fdanielkraic.github.io%2f2016%2f09%2f13%2fmongodb%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanielkraic.github.io%2f2016%2f09%2f13%2fmongodb%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2fdanielkraic.github.io%2f2016%2f09%2f13%2fmongodb%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://danielkraic.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+        <script src="https://danielkraic.github.io/js/jquery.fitvids.js"></script>
+        <script src="https://danielkraic.github.io/js/scripts.js"></script>
+    </body>
+</html>
+

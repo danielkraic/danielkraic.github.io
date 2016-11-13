@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>git &middot; </title>
+        <meta name="description" content="git config git config --global user.name &quot;John Doe&quot; git config --global user.email johndoe@example.com git config --global core.editor nvim git config --global core.difftool meld git config --global core.mergetool meld git difftool --tool-help git mergetool --tool-help git config --global alias.co checkout git config --global alias.br branch git config --global alias.ci commit git config --global alias.st status git config --global alias.unstage &#39;reset HEAD --&#39; # git unstaged file_name # git reset HEAD file_name git config --global alias.visual &#39;!gitk&#39; cat /etc/gitconfig cat ~/.gitconfig git config --list git config user.name help git help &lt;verb&gt; git &lt;verb&gt; --help man git-&lt;verb&gt; git help config gitignore Blank lines or lines starting with # are ignored.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.17-DEV" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/normalize.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/highlight.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://danielkraic.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="danielkraic">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Gitlab" title="Gitlab" href="danielkraic">
+                                <i class="fa fa-gitlab"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="danielkraic">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="danielkraic">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="danielkraic">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">git</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2016-08-29" itemprop="datePublished">Mon, Aug 29, 2016</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author"></a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<h1 id="git">git</h1>
+
+<h2 id="config">config</h2>
+
+<pre><code class="language-bash">git config --global user.name &quot;John Doe&quot;
+git config --global user.email johndoe@example.com
+git config --global core.editor nvim
+git config --global core.difftool meld
+git config --global core.mergetool meld
+
+git difftool --tool-help
+git mergetool --tool-help
+
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+
+git config --global alias.unstage 'reset HEAD --'
+# git unstaged file_name
+# git reset HEAD file_name
+
+git config --global alias.visual '!gitk'
+</code></pre>
+
+<pre><code class="language-bash">cat /etc/gitconfig
+cat ~/.gitconfig
+
+git config --list
+git config user.name
+</code></pre>
+
+<h2 id="help">help</h2>
+
+<pre><code class="language-bash">git help &lt;verb&gt;
+git &lt;verb&gt; --help
+man git-&lt;verb&gt;
+git help config
+</code></pre>
+
+<h2 id="gitignore">gitignore</h2>
+
+<ul>
+<li>Blank lines or lines starting with # are ignored.</li>
+<li>Standard glob patterns work.</li>
+<li>You can start patterns with a forward slash ( / ) to avoid recursivity.</li>
+<li>You can end patterns with a forward slash ( / ) to specify a directory.</li>
+<li>You can negate a pattern by starting it with an exclamation point ( ! ).</li>
+</ul>
+
+<pre><code class="language-bash">cat .gitignore
+# no .a files
+*.a
+# except lib.a
+!lib.a
+# only ignore the TODO file in the current directory, not subdir/TODO
+/TODO
+# ignore all files in the build/ directory
+build/
+# ignore doc/notes.txt, but not doc/server/arch.txt
+doc/*.txt
+# ignore all .pdf files in the doc/ directory
+doc/**/*.pdf
+        ```
+
+## init
+
+```bash
+git init
+git clone [url]
+git clone [url] dir_nam
+</code></pre>
+
+<h2 id="status">status</h2>
+
+<pre><code class="language-bash">git status
+git status -s
+git status --short
+git add README
+</code></pre>
+
+<h2 id="diff">diff</h2>
+
+<pre><code class="language-bash">git diff
+git diff --staged
+git diff --cached
+# --staged and --cached are synonyms
+git difftool
+git difftool --tool-help
+</code></pre>
+
+<h2 id="commit">commit</h2>
+
+<pre><code class="language-bash">git commit
+git commit -v
+git commit -m 'commit msg'
+git commit -a
+git commit -a -m 'commit msg'
+</code></pre>
+
+<h1 id="undo">undo</h1>
+
+<pre><code class="language-bash">git commit -m 'msg'
+git add forgotten_file
+git commit --amend
+
+git reset HEAD staged_file
+
+git checkout modified_file
+</code></pre>
+
+<h2 id="move-and-delete">move and delete</h2>
+
+<pre><code class="language-bash">git rm file
+git rm --cached file # remove only from stage
+git rm \*~
+git mv file1 file2
+</code></pre>
+
+<h2 id="log">log</h2>
+
+<pre><code class="language-bash">git log
+git log --stat # see commit stats
+git log --shortstat
+git log --graph
+git log --abbrev-commit
+git log --name-status
+git log --name-only
+git log -p # print diff
+git log --oneline --decorate
+git log --oneline --decorate --graph --all
+
+git log -2 # limit to last 2 commits
+git log --after=2.weeks # --since, --after
+git log --before=2.weeks # --until, --before
+git log --since=2008-01-15
+git log --author=name
+git log --commiter=name
+git log -Sfunction_name # grep added/removed code
+git log --grep pattern # grep commit message
+
+git log --pretty=oneline
+git log --pretty=short
+git log --pretty=full
+git log --pretty=fuller
+git log --pretty=format:&quot;%h - %an, %ar : %s&quot;
+</code></pre>
+
+<p>pretty log options:
+* %H Commit hash
+* %h Abbreviated commit hash
+* %T Tree hash
+* %t Abbreviated tree hash
+* %P Parent hashes
+* %p Abbreviated parent hashes
+* %an Author name
+* %ae Author email
+* %ad Author date (format respects the &ndash;date=option)
+* %ar Author date, relative
+* %cn Committer name
+* %ce Committer email
+* %cd Committer date
+* %cr Committer date, relative
+* %s Subject</p>
+
+<h2 id="remotes">remotes</h2>
+
+<pre><code class="language-bash">git remote
+git remote -v
+git remote show remote_name
+git remote add remote_name remote_url
+git remote rename old_remote_name new_remote_name
+git remote rm remote_name
+
+git fetch remote_name
+git fetch --all
+git pull # fetch and merge (from server you originally clone from)
+git push remote_name branch_name
+</code></pre>
+
+<h2 id="tags">tags</h2>
+
+<pre><code class="language-bash">git tag
+git tag -l &quot;v1.8.5*&quot; # grep tags
+
+# create anotated tag
+git tag -a v1.4 -m &quot;my version 1.4&quot;
+git show v1.4
+
+# create tag into history
+git log --pretty=oneline
+git tag -a v1.2 9fceb02
+
+# create lightweight tag
+git tag v1.4-lw
+
+# tags are not pushed by default, need to do it explicitly
+git push origin v1.4
+git push origin --tags
+
+git checkout -b branch_name tag_name
+</code></pre>
+
+<h2 id="branch">branch</h2>
+
+<pre><code class="language-bash">git branch
+git branch -v # see last commit
+git branch --merged
+git branch ---no-merged
+
+git branch new_branch_name
+git checkout new_branch_name
+
+git checkout -b new_branch_name
+
+git checkout master
+git merge new_branch_name
+
+git branch -d new_branch_name
+git branch -D new_branch_name
+</code></pre>
+
+<h2 id="remote-branches">remote branches</h2>
+
+<pre><code class="language-bash">git ls-remote
+git ls-remote [remote]
+git remote show [remote]
+
+git checkout -b br1 origin/br1
+# or
+git checkout --track origin/br1
+# or
+git checkout br1
+
+git checkout -b different_br_name origin/br1
+
+# set existing branch to track remote branch`
+git branch -u origin/serverfix
+
+git branch -vv # see tracking branches info
+
+# delete remote branch
+git push origin --delete br1
+</code></pre>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="https://danielkraic.github.io/tags/git/">git</a>
+            
+                 <a href="https://danielkraic.github.io/tags/tools/">tools</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="https://twitter.com/share?text=git&url=https%3a%2f%2fdanielkraic.github.io%2f2016%2f08%2f29%2fgit%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanielkraic.github.io%2f2016%2f08%2f29%2fgit%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2fdanielkraic.github.io%2f2016%2f08%2f29%2fgit%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://danielkraic.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+        <script src="https://danielkraic.github.io/js/jquery.fitvids.js"></script>
+        <script src="https://danielkraic.github.io/js/scripts.js"></script>
+    </body>
+</html>
+

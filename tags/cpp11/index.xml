@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cpp11 on Linux blog</title>
+    <link>https://danielkraic.github.io/tags/cpp11/</link>
+    <description>Recent content in Cpp11 on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 24 Sep 2015 10:33:23 +0200</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/tags/cpp11/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>CPP random engine</title>
+      <link>https://danielkraic.github.io/2015/09/24/cpp-random-engine/</link>
+      <pubDate>Thu, 24 Sep 2015 10:33:23 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/24/cpp-random-engine/</guid>
+      <description>
+
+&lt;p&gt;C++11 random engine&lt;/p&gt;
+
+&lt;h4 id=&#34;example-sleep-for-100-1000-milliseconds&#34;&gt;Example - sleep for 100-1000 milliseconds&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;random&amp;gt;
+#include &amp;lt;thread&amp;gt;
+#include &amp;lt;chrono&amp;gt;
+
+std::random_device rd;
+std::default_random_engine dre(rd());
+std::uniform_int_distribution&amp;lt;int&amp;gt; id(100,1000);
+
+std::this_thread::sleep_for(std::chrono::milliseconds(id(dre)));
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

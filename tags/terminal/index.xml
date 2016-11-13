@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Terminal on Linux blog</title>
+    <link>https://danielkraic.github.io/tags/terminal/</link>
+    <description>Recent content in Terminal on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 18 Nov 2015 08:58:16 +0100</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/tags/terminal/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Terminator</title>
+      <link>https://danielkraic.github.io/2015/11/18/terminator/</link>
+      <pubDate>Wed, 18 Nov 2015 08:58:16 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/11/18/terminator/</guid>
+      <description>
+
+&lt;h1 id=&#34;terminator&#34;&gt;Terminator&lt;/h1&gt;
+
+&lt;h5 id=&#34;split&#34;&gt;Split&lt;/h5&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+0&lt;/td&gt;
+&lt;td&gt;Split Terminal Horizontally&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+E&lt;/td&gt;
+&lt;td&gt;Split Terminal Vertically&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h5 id=&#34;resize&#34;&gt;Resize&lt;/h5&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Left&lt;/td&gt;
+&lt;td&gt;Resize Left&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Right&lt;/td&gt;
+&lt;td&gt;Resize Right&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Up&lt;/td&gt;
+&lt;td&gt;Resize Up&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Down&lt;/td&gt;
+&lt;td&gt;Resize Down&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;move&#34;&gt;Move&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Alt+Up&lt;/td&gt;
+&lt;td&gt;Move to the Above Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt+Down&lt;/td&gt;
+&lt;td&gt;Move to the Below Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt+Left&lt;/td&gt;
+&lt;td&gt;Move to the Left Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Alt+Right&lt;/td&gt;
+&lt;td&gt;Move to the Right Terminal&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Tab or Ctrl+Shift+N&lt;/td&gt;
+&lt;td&gt;Move to Next Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Tab or Ctrl+Shift+P&lt;/td&gt;
+&lt;td&gt;Move to Previous Terminal&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Super+R&lt;/td&gt;
+&lt;td&gt;Rotate terminals clockwise&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Super+Shift+R&lt;/td&gt;
+&lt;td&gt;Rotate terminals counter-clockwise&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;clipboard&#34;&gt;Clipboard&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+c&lt;/td&gt;
+&lt;td&gt;Copy a text to clipboard&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+v&lt;/td&gt;
+&lt;td&gt;Paste a text from Clipboard&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;close&#34;&gt;Close&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+w&lt;/td&gt;
+&lt;td&gt;Close the Current Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+q&lt;/td&gt;
+&lt;td&gt;Quit the Terminator&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;view&#34;&gt;View&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+x&lt;/td&gt;
+&lt;td&gt;Maximise terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+z&lt;/td&gt;
+&lt;td&gt;Zoom terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+s&lt;/td&gt;
+&lt;td&gt;Hide/Show Scrollbar&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;F11&lt;/td&gt;
+&lt;td&gt;Toggle Full Screen Mode&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+(+)&lt;/td&gt;
+&lt;td&gt;Increase Font size&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+(-­)&lt;/td&gt;
+&lt;td&gt;Decrease Font Size&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+0&lt;/td&gt;
+&lt;td&gt;Reset Font Size to Original&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;tabs-and-windows&#34;&gt;Tabs and windows&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+t&lt;/td&gt;
+&lt;td&gt;Open New Tab&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+i&lt;/td&gt;
+&lt;td&gt;Open New Window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+page_Down&lt;/td&gt;
+&lt;td&gt;Move to Next Tab&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Page_up&lt;/td&gt;
+&lt;td&gt;Move to Previous Tab&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+Page_up&lt;/td&gt;
+&lt;td&gt;Move tab left&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+page_Down&lt;/td&gt;
+&lt;td&gt;Move tab right&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;grouping&#34;&gt;Grouping&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Super+g&lt;/td&gt;
+&lt;td&gt;Group all terminals&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Super+t&lt;/td&gt;
+&lt;td&gt;Group terminals in tab&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Super+Shift+g&lt;/td&gt;
+&lt;td&gt;Ungroup all terminals&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Super+Shift+t&lt;/td&gt;
+&lt;td&gt;Ungroup terminals in tab&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+f&lt;/td&gt;
+&lt;td&gt;Search for a Keyword&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&#34;reset&#34;&gt;Reset&lt;/h4&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shortcut&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+R&lt;/td&gt;
+&lt;td&gt;Reset Terminal&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl+Shift+G&lt;/td&gt;
+&lt;td&gt;Reset Terminal and Clear Window&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

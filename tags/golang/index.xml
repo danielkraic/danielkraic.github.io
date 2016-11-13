@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on Linux blog</title>
+    <link>https://danielkraic.github.io/tags/golang/</link>
+    <description>Recent content in Golang on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 14 Sep 2015 20:06:13 +0200</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Golang installation with GVM</title>
+      <link>https://danielkraic.github.io/2015/09/14/golang-installation-with-gvm/</link>
+      <pubDate>Mon, 14 Sep 2015 20:06:13 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/14/golang-installation-with-gvm/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/moovweb/gvm&#34;&gt;GVM&lt;/a&gt; is version manager for &lt;a href=&#34;https://golang.org/&#34;&gt;golang&lt;/a&gt;. GVM provides an interface to install and manage multiple &lt;em&gt;golang&lt;/em&gt; versions.&lt;/p&gt;
+
+&lt;h3 id=&#34;install-gvm&#34;&gt;Install GVM&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;bash &amp;lt; &amp;lt;(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;list-available-versions-of-golang&#34;&gt;List available versions of golang&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;gvm listall
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;install-version-v1-4&#34;&gt;Install version v1.4&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;gvm install go1.4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;use-v1-4-as-default&#34;&gt;Use v1.4 (as default)&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;gvm use go1.4 --default
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

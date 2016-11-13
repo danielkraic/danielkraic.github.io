@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mongo on Linux blog</title>
+    <link>https://danielkraic.github.io/tags/mongo/</link>
+    <description>Recent content in Mongo on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 13 Sep 2016 13:46:10 +0200</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/tags/mongo/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>MongoDB</title>
+      <link>https://danielkraic.github.io/2016/09/13/mongodb/</link>
+      <pubDate>Tue, 13 Sep 2016 13:46:10 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/09/13/mongodb/</guid>
+      <description>
+
+&lt;h1 id=&#34;mongodb&#34;&gt;MongoDB&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;help
+
+show dbs
+show collections
+show users
+show roles
+show profile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;use &amp;lt;db&amp;gt;
+
+coll = db.&amp;lt;collection&amp;gt;
+coll.find();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;operators&#34;&gt;operators&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;$eq, $gt, $gte, $lt, $lte, $ne, $in, $nin&lt;/li&gt;
+&lt;li&gt;$and, $or, $not, $nor&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;find&#34;&gt;find&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find()
+db.restaurants.findOne()
+db.restaurants.find( { &amp;quot;grades.grade&amp;quot;: &amp;quot;B&amp;quot; } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.find( { name: null } )
+db.users.find( { name : { $exists: false } } )
+db.users.find( { name : { $type: 10 } } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find( { &amp;quot;grades.score&amp;quot;: { $gt: 30 } } )
+db.restaurants.find( { &amp;quot;grades.score&amp;quot;: { $lt: 10 } } )
+//and
+db.restaurants.find( { &amp;quot;cuisine&amp;quot;: &amp;quot;Italian&amp;quot;, &amp;quot;address.zipcode&amp;quot;: &amp;quot;10075&amp;quot; } )
+//or
+db.restaurants.find(
+   { $or: [ { &amp;quot;cuisine&amp;quot;: &amp;quot;Italian&amp;quot; }, { &amp;quot;address.zipcode&amp;quot;: &amp;quot;10075&amp;quot; } ] }
+)
+db.users.find( { status: { $in: [ &amp;quot;P&amp;quot;, &amp;quot;D&amp;quot; ] } } )
+db.users.find( { status: &amp;quot;A&amp;quot;, age: { $lt: 30 } } )
+db.users.find(
+   {
+     status: &amp;quot;A&amp;quot;,
+     $or: [ { age: { $lt: 30 } }, { type: 1 } ]
+   }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;query-embedded-document&#34;&gt;query embedded document&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.find( { &amp;quot;favorites.artist&amp;quot;: &amp;quot;Picasso&amp;quot; } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;query-array&#34;&gt;query array&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;//exact match
+db.users.find( { badges: [ &amp;quot;blue&amp;quot;, &amp;quot;black&amp;quot; ] } )
+//match array element
+db.users.find( { badges: &amp;quot;black&amp;quot; } )
+//match specific array element
+db.users.find( { &amp;quot;badges.0&amp;quot;: &amp;quot;black&amp;quot; } )
+//Multiple Criteria for Array Elements
+db.users.find( { finished: { $elemMatch: { $gt: 15, $lt: 20 } } } )
+// Array of Embedded Documents
+db.users.find( { &#39;points.0.points&#39;: { $lte: 55 } } )
+db.users.find( { &#39;points.points&#39;: { $lte: 55 } } )
+db.users.find( { points: { $elemMatch: { points: { $lte: 70 }, bonus: 20 } } } )
+db.users.find( { &amp;quot;points.points&amp;quot;: { $lte: 70 }, &amp;quot;points.bonus&amp;quot;: 20 } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;sort&#34;&gt;sort&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find().sort( { name: 1 } );
+db.restaurants.find().sort( { name: -1 } );
+db.restaurants.find().sort( { &amp;quot;borough&amp;quot;: 1, &amp;quot;address.zipcode&amp;quot;: 1 } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;projection&#34;&gt;projection&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find({}, { name:true, restaurant_id:true} )
+db.users.find( { status: &amp;quot;A&amp;quot; }, { name: 1, status: 1, _id: 0 } )
+// return fields of embedded doc
+db.users.find(
+   { status: &amp;quot;A&amp;quot; },
+   { name: 1, status: 1, &amp;quot;favorites.food&amp;quot;: 1 }
+)
+// return all but excluded
+db.users.find( { status: &amp;quot;A&amp;quot; }, { favorites: 0, points: 0 } )
+// return  Specific Array Elements
+db.users.find( { status: &amp;quot;A&amp;quot; }, { name: 1, status: 1, points: { $slice: -1 } } )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;limit&#34;&gt;limit&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find().limit(1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;skip&#34;&gt;skip&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.find().limit(10)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;insert&#34;&gt;insert&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.insertOne(
+   {
+      name: &amp;quot;sue&amp;quot;,
+      age: 19,
+      status: &amp;quot;P&amp;quot;
+   }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.insertMany(
+   [
+     { name: &amp;quot;bob&amp;quot;, age: 42, status: &amp;quot;A&amp;quot;, },
+     { name: &amp;quot;ahn&amp;quot;, age: 22, status: &amp;quot;A&amp;quot;, },
+     { name: &amp;quot;xi&amp;quot;, age: 34, status: &amp;quot;D&amp;quot;, }
+   ]
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;// insert single doc
+db.users.insert(
+   {
+      name: &amp;quot;sue&amp;quot;,
+      age: 19,
+      status: &amp;quot;P&amp;quot;
+   }
+)
+
+// insert multiple docs
+db.users.insert(
+   [
+     { name: &amp;quot;bob&amp;quot;, age: 42, status: &amp;quot;A&amp;quot;, },
+     { name: &amp;quot;ahn&amp;quot;, age: 22, status: &amp;quot;A&amp;quot;, },
+     { name: &amp;quot;xi&amp;quot;, age: 34, status: &amp;quot;D&amp;quot;, }
+   ]
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;update&#34;&gt;update&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;{ upsert : true}&lt;/code&gt; - update or insert new&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;{ multi : true}&lt;/code&gt; - update multiple dics&lt;/li&gt;
+&lt;li&gt;updateOne&lt;/li&gt;
+&lt;li&gt;updateMany&lt;/li&gt;
+&lt;li&gt;replaceOne/update&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;update-operators&#34;&gt;update operators&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;$inc, $mul, $rename, $setOrInsert, $set, $unset, $min, $max, $currentDate&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.update(
+    { &amp;quot;name&amp;quot; : &amp;quot;Juni&amp;quot; },
+    {
+      $set: { &amp;quot;cuisine&amp;quot;: &amp;quot;American (New)&amp;quot; },
+      $currentDate: { &amp;quot;lastModified&amp;quot;: true }
+    }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.update(
+  { &amp;quot;restaurant_id&amp;quot; : &amp;quot;41156888&amp;quot; },
+  { $set: { &amp;quot;address.street&amp;quot;: &amp;quot;East 31st Street&amp;quot; } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;update-multiple-docs&#34;&gt;update multiple docs&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.update(
+  { &amp;quot;address.zipcode&amp;quot;: &amp;quot;10016&amp;quot;, cuisine: &amp;quot;Other&amp;quot; },
+  {
+    $set: { cuisine: &amp;quot;Category To Be Determined&amp;quot; },
+    $currentDate: { &amp;quot;lastModified&amp;quot;: true }
+  },
+  { multi: true}
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;update-array&#34;&gt;update array&lt;/h3&gt;
+
+&lt;h4 id=&#34;elemmatch&#34;&gt;$elemMatch&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;db.students.update(
+   {
+     _id: 4,
+     grades: { $elemMatch: { grade: { $lte: 90 }, mean: { $gt: 80 } } }
+   },
+   { $set: { &amp;quot;grades.$.std&amp;quot; : 6 } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;placeholder&#34;&gt;placeholder $&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;// positional $ operator acts as a placeholder for the first match of the update query
+db.students.update(
+   { _id: 1, grades: 80 },
+   { $set: { &amp;quot;grades.$&amp;quot; : 82 } }
+)
+db.students.update(
+   { _id: 4, &amp;quot;grades.grade&amp;quot;: 85 },
+   { $set: { &amp;quot;grades.$.std&amp;quot; : 6 } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;addtoset&#34;&gt;$addToSet&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.update(
+  { letters : { $exists: true } },
+  { $addToSet: { letters: &amp;quot;g&amp;quot; } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;each&#34;&gt;$each&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;db.users.update(
+  { letters : { $exists: true } },
+  { $addToSet: { letters: { $each:[&amp;quot;f&amp;quot;,&amp;quot;e&amp;quot;] } } }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;replace-doc&#34;&gt;replace doc&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.update(
+   { &amp;quot;restaurant_id&amp;quot; : &amp;quot;41704620&amp;quot; },
+   {
+     &amp;quot;name&amp;quot; : &amp;quot;Vella 2&amp;quot;,
+     &amp;quot;address&amp;quot; : {
+              &amp;quot;coord&amp;quot; : [ -73.9557413, 40.7720266 ],
+              &amp;quot;building&amp;quot; : &amp;quot;1480&amp;quot;,
+              &amp;quot;street&amp;quot; : &amp;quot;2 Avenue&amp;quot;,
+              &amp;quot;zipcode&amp;quot; : &amp;quot;10075&amp;quot;
+     }
+   }
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;remove&#34;&gt;remove&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.remove( { &amp;quot;borough&amp;quot;: &amp;quot;Manhattan&amp;quot; } )
+db.restaurants.remove( { &amp;quot;borough&amp;quot;: &amp;quot;Queens&amp;quot; }, { justOne: true } )
+//remove all docs
+db.restaurants.remove( { } )
+//drop collection
+db.restaurants.drop()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;aggregate&#34;&gt;aggregate&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;db.restaurants.aggregate(
+   [
+     { $group: { &amp;quot;_id&amp;quot;: &amp;quot;$borough&amp;quot;, &amp;quot;count&amp;quot;: { $sum: 1 } } }
+   ]
+);
+db.restaurants.aggregate(
+   [
+     { $match: { &amp;quot;borough&amp;quot;: &amp;quot;Queens&amp;quot;, &amp;quot;cuisine&amp;quot;: &amp;quot;Brazilian&amp;quot; } },
+     { $group: { &amp;quot;_id&amp;quot;: &amp;quot;$address.zipcode&amp;quot; , &amp;quot;count&amp;quot;: { $sum: 1 } } }
+   ]
+);
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

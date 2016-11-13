@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>DNF &middot; </title>
+        <meta name="description" content="DNF package manager in Fedora DNF - Dandified Yum next generation YUM docs: http://dnf.readthedocs.org/en/latest/ command description dnf help help dnf install vim install pkg dnf reinstall vim reinstall pkg dnf remove vim # or erase remove pkg dnf check-update check system updates dnf update vim update pkg dnf update # or upgrade update all pkgs dnf search vim search pkg dnf info show pkg info dnf provides /bin/bash find pks">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.17-DEV" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/normalize.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/highlight.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://danielkraic.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="danielkraic">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Gitlab" title="Gitlab" href="danielkraic">
+                                <i class="fa fa-gitlab"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="danielkraic">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="danielkraic">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="danielkraic">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">DNF</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2015-10-30" itemprop="datePublished">Fri, Oct 30, 2015</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author"></a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<h1 id="dnf">DNF</h1>
+
+<ul>
+<li>package manager in Fedora</li>
+<li>DNF - Dandified Yum</li>
+<li>next generation YUM</li>
+<li>docs: <a href="http://dnf.readthedocs.org/en/latest/">http://dnf.readthedocs.org/en/latest/</a></li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>command</th>
+<th>description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>dnf help</td>
+<td>help</td>
+</tr>
+
+<tr>
+<td>dnf install vim</td>
+<td>install pkg</td>
+</tr>
+
+<tr>
+<td>dnf reinstall vim</td>
+<td>reinstall pkg</td>
+</tr>
+
+<tr>
+<td>dnf remove vim # or erase</td>
+<td>remove pkg</td>
+</tr>
+
+<tr>
+<td>dnf check-update</td>
+<td>check system updates</td>
+</tr>
+
+<tr>
+<td>dnf update vim</td>
+<td>update pkg</td>
+</tr>
+
+<tr>
+<td>dnf update # or upgrade</td>
+<td>update all pkgs</td>
+</tr>
+
+<tr>
+<td>dnf search vim</td>
+<td>search pkg</td>
+</tr>
+
+<tr>
+<td>dnf info</td>
+<td>show pkg info</td>
+</tr>
+
+<tr>
+<td>dnf provides /bin/bash</td>
+<td>find pks which provides file</td>
+</tr>
+
+<tr>
+<td>dnf list installed</td>
+<td>list all installed pkgs</td>
+</tr>
+
+<tr>
+<td>dnf list available</td>
+<td>list all available pkgs</td>
+</tr>
+
+<tr>
+<td>dnf autoremove</td>
+<td>remove no-longer-needed pkgs</td>
+</tr>
+
+<tr>
+<td>dnf clean all</td>
+<td>clean caches</td>
+</tr>
+
+<tr>
+<td>dnf history</td>
+<td>view history</td>
+</tr>
+
+<tr>
+<td>dnf repolist</td>
+<td>list all enabled repos</td>
+</tr>
+
+<tr>
+<td>dnf repolist all</td>
+<td>list all enabled ans disabled repos</td>
+</tr>
+
+<tr>
+<td>dnf grouplist</td>
+<td>list pkg groups</td>
+</tr>
+
+<tr>
+<td>dnf groupinstall &lsquo;LibreOffice&rsquo;</td>
+<td>install pkg group</td>
+</tr>
+
+<tr>
+<td>dnf groupupdate &lsquo;LibreOffice&rsquo;</td>
+<td>update pkg group</td>
+</tr>
+
+<tr>
+<td>dnf groupremove &lsquo;LibreOffice&rsquo;</td>
+<td>remove pkg group</td>
+</tr>
+
+<tr>
+<td>dnf &ndash;enablerepo=epel install phpmyadmin</td>
+<td>install pkg form specific repo</td>
+</tr>
+
+<tr>
+<td>dnf distro-sync</td>
+<td>sync pkgs to stable release</td>
+</tr>
+
+<tr>
+<td>dnf copr enable user/project</td>
+<td>enable copr repo</td>
+</tr>
+
+<tr>
+<td>dnf copr disable user/project</td>
+<td>disable copr repo</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="https://danielkraic.github.io/tags/sys/">sys</a>
+            
+                 <a href="https://danielkraic.github.io/tags/fedora/">fedora</a>
+            
+                 <a href="https://danielkraic.github.io/tags/dnf/">dnf</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="https://twitter.com/share?text=DNF&url=https%3a%2f%2fdanielkraic.github.io%2f2015%2f10%2f30%2fdnf%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanielkraic.github.io%2f2015%2f10%2f30%2fdnf%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2fdanielkraic.github.io%2f2015%2f10%2f30%2fdnf%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://danielkraic.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+        <script src="https://danielkraic.github.io/js/jquery.fitvids.js"></script>
+        <script src="https://danielkraic.github.io/js/scripts.js"></script>
+    </body>
+</html>
+

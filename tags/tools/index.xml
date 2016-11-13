@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tools on Linux blog</title>
+    <link>https://danielkraic.github.io/tags/tools/</link>
+    <description>Recent content in Tools on Linux blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 29 Aug 2016 15:25:28 +0200</lastBuildDate>
+    <atom:link href="https://danielkraic.github.io/tags/tools/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>git</title>
+      <link>https://danielkraic.github.io/2016/08/29/git/</link>
+      <pubDate>Mon, 29 Aug 2016 15:25:28 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/08/29/git/</guid>
+      <description>
+
+&lt;h1 id=&#34;git&#34;&gt;git&lt;/h1&gt;
+
+&lt;h2 id=&#34;config&#34;&gt;config&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git config --global user.name &amp;quot;John Doe&amp;quot;
+git config --global user.email johndoe@example.com
+git config --global core.editor nvim
+git config --global core.difftool meld
+git config --global core.mergetool meld
+
+git difftool --tool-help
+git mergetool --tool-help
+
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+
+git config --global alias.unstage &#39;reset HEAD --&#39;
+# git unstaged file_name
+# git reset HEAD file_name
+
+git config --global alias.visual &#39;!gitk&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cat /etc/gitconfig
+cat ~/.gitconfig
+
+git config --list
+git config user.name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;help&#34;&gt;help&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git help &amp;lt;verb&amp;gt;
+git &amp;lt;verb&amp;gt; --help
+man git-&amp;lt;verb&amp;gt;
+git help config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;gitignore&#34;&gt;gitignore&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Blank lines or lines starting with # are ignored.&lt;/li&gt;
+&lt;li&gt;Standard glob patterns work.&lt;/li&gt;
+&lt;li&gt;You can start patterns with a forward slash ( / ) to avoid recursivity.&lt;/li&gt;
+&lt;li&gt;You can end patterns with a forward slash ( / ) to specify a directory.&lt;/li&gt;
+&lt;li&gt;You can negate a pattern by starting it with an exclamation point ( ! ).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cat .gitignore
+# no .a files
+*.a
+# except lib.a
+!lib.a
+# only ignore the TODO file in the current directory, not subdir/TODO
+/TODO
+# ignore all files in the build/ directory
+build/
+# ignore doc/notes.txt, but not doc/server/arch.txt
+doc/*.txt
+# ignore all .pdf files in the doc/ directory
+doc/**/*.pdf
+        ```
+
+## init
+
+```bash
+git init
+git clone [url]
+git clone [url] dir_nam
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;status&#34;&gt;status&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git status
+git status -s
+git status --short
+git add README
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;diff&#34;&gt;diff&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git diff
+git diff --staged
+git diff --cached
+# --staged and --cached are synonyms
+git difftool
+git difftool --tool-help
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;commit&#34;&gt;commit&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git commit
+git commit -v
+git commit -m &#39;commit msg&#39;
+git commit -a
+git commit -a -m &#39;commit msg&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;undo&#34;&gt;undo&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git commit -m &#39;msg&#39;
+git add forgotten_file
+git commit --amend
+
+git reset HEAD staged_file
+
+git checkout modified_file
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;move-and-delete&#34;&gt;move and delete&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git rm file
+git rm --cached file # remove only from stage
+git rm \*~
+git mv file1 file2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;log&#34;&gt;log&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git log
+git log --stat # see commit stats
+git log --shortstat
+git log --graph
+git log --abbrev-commit
+git log --name-status
+git log --name-only
+git log -p # print diff
+git log --oneline --decorate
+git log --oneline --decorate --graph --all
+
+git log -2 # limit to last 2 commits
+git log --after=2.weeks # --since, --after
+git log --before=2.weeks # --until, --before
+git log --since=2008-01-15
+git log --author=name
+git log --commiter=name
+git log -Sfunction_name # grep added/removed code
+git log --grep pattern # grep commit message
+
+git log --pretty=oneline
+git log --pretty=short
+git log --pretty=full
+git log --pretty=fuller
+git log --pretty=format:&amp;quot;%h - %an, %ar : %s&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;pretty log options:
+* %H Commit hash
+* %h Abbreviated commit hash
+* %T Tree hash
+* %t Abbreviated tree hash
+* %P Parent hashes
+* %p Abbreviated parent hashes
+* %an Author name
+* %ae Author email
+* %ad Author date (format respects the &amp;ndash;date=option)
+* %ar Author date, relative
+* %cn Committer name
+* %ce Committer email
+* %cd Committer date
+* %cr Committer date, relative
+* %s Subject&lt;/p&gt;
+
+&lt;h2 id=&#34;remotes&#34;&gt;remotes&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git remote
+git remote -v
+git remote show remote_name
+git remote add remote_name remote_url
+git remote rename old_remote_name new_remote_name
+git remote rm remote_name
+
+git fetch remote_name
+git fetch --all
+git pull # fetch and merge (from server you originally clone from)
+git push remote_name branch_name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;tags&#34;&gt;tags&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git tag
+git tag -l &amp;quot;v1.8.5*&amp;quot; # grep tags
+
+# create anotated tag
+git tag -a v1.4 -m &amp;quot;my version 1.4&amp;quot;
+git show v1.4
+
+# create tag into history
+git log --pretty=oneline
+git tag -a v1.2 9fceb02
+
+# create lightweight tag
+git tag v1.4-lw
+
+# tags are not pushed by default, need to do it explicitly
+git push origin v1.4
+git push origin --tags
+
+git checkout -b branch_name tag_name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;branch&#34;&gt;branch&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git branch
+git branch -v # see last commit
+git branch --merged
+git branch ---no-merged
+
+git branch new_branch_name
+git checkout new_branch_name
+
+git checkout -b new_branch_name
+
+git checkout master
+git merge new_branch_name
+
+git branch -d new_branch_name
+git branch -D new_branch_name
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;remote-branches&#34;&gt;remote branches&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git ls-remote
+git ls-remote [remote]
+git remote show [remote]
+
+git checkout -b br1 origin/br1
+# or
+git checkout --track origin/br1
+# or
+git checkout br1
+
+git checkout -b different_br_name origin/br1
+
+# set existing branch to track remote branch`
+git branch -u origin/serverfix
+
+git branch -vv # see tracking branches info
+
+# delete remote branch
+git push origin --delete br1
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>sed</title>
+      <link>https://danielkraic.github.io/2016/07/27/sed/</link>
+      <pubDate>Wed, 27 Jul 2016 20:22:23 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/07/27/sed/</guid>
+      <description>
+
+&lt;h1 id=&#34;sed&#34;&gt;sed&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# range of lines
+sed -n &#39;5,10p&#39; myfile.txt
+
+# all lines except given range
+sed &#39;20,35d&#39; myfile.txt
+
+# non-consecutive lines and ranges
+sed -n -e &#39;5,7p&#39; -e &#39;10,13p&#39; myfile.txt
+
+# replace
+sed &#39;s/version/story/g&#39; myfile.txt
+sed &#39;s/version/story/gi&#39; myfile.txt
+ip route show | sed &#39;s/  */ /g&#39;
+sed &#39;s/[Zz]ip/rar/g&#39; myfile.txt
+sed -i &#39;s/that/this/gi;s/line/verse/gi&#39; myfile.txt
+
+# replace in range
+sed &#39;30,40 s/version/story/g&#39; myfile.txt
+
+# remove emty lines or comments (in apache config)
+sed &#39;/^#\|^$\| *#/d&#39; httpd.conf
+
+# dos2unix
+sed -i &#39;s/\r//&#39; myfile.txt
+
+# in-place editing with backup
+sed -i&#39;.orig&#39; &#39;s/this/that/gi&#39; myfile.txt
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Selinux</title>
+      <link>https://danielkraic.github.io/2016/01/25/selinux/</link>
+      <pubDate>Mon, 25 Jan 2016 20:24:11 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/01/25/selinux/</guid>
+      <description>
+
+&lt;h1 id=&#34;selinux&#34;&gt;Selinux&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ls -Z ~/.bashrc
+#unconfined_u:object_r:user_home_t:s0
+# user:  unconfined_u
+# role:  object_r
+# type:  user_home_t
+# level: s0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;states-and-modes&#34;&gt;states and modes&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;getenforce
+#Enforcing
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;setenforce 0
+getenforce
+#Permissive
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;setenforce 1
+getenforce
+#Enforcing
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;status&#34;&gt;status&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sestatus
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;semanage&#34;&gt;semanage&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;SELinux Policy Management tool&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;semanage login -l
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;seinfo - SELinux policy query tool&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;seinfo -r # list roles
+seinfo -b | grep http | grep cgi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;SELinux contexts for running processes&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ps -eZ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;SELinux context associated with your Linux user&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;id -Z
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;chcon&#34;&gt;chcon&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;change file SELinux security context&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;chcon -t samba_share_t /var/www/html/testfile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;make http unconfined (not using selinux labels)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ls -Z /usr/sbin/httpd
+chcon -t unconfined_exec_t /usr/sbin/httpd
+ls -Z /usr/sbin/httpd
+#restore
+restorecon -v /usr/sbin/httpd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;useradd newuser 
+passwd newuser 
+id -Z
+userdel -r newuser
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;config&#34;&gt;config&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;vim /etc/selinux/config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;booleans&#34;&gt;booleans&lt;/h2&gt;
+
+&lt;h3 id=&#34;list&#34;&gt;list&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;semanage boolean -l
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;get&#34;&gt;get&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;getsebool -a
+getsebool allow_console_login
+getsebool allow_console_login allow_cvs_read_shadow allow_daemons_dump_core
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;set&#34;&gt;set&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;getsebool httpd_can_network_connect_db
+setsebool httpd_can_network_connect_db on
+setsebool -P httpd_can_network_connect_db on # make changes persistent across reboots
+getsebool httpd_can_network_connect_db
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;labelig-files&#34;&gt;labelig files&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;ls -Z file1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;chcon-1&#34;&gt;chcon&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#changes SELinux context for files (changes do not survive system relabel or restorecon)
+chcon -t type file-name 
+chcon -R -t type directory-name
+chcon -v --type=httpd_sys_content_t /html
+chcon -Rv --type=httpd_sys_content_t /html
+semanage fcontext -a -t httpd_sys_content_t &amp;quot;/html(/.*)?&amp;quot; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -Z file1
+chcon -t httpd_sys_content_t file1
+restorecon -v file1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;ports&#34;&gt;ports&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;semanage port -l | grep http
+semanage port -a -t http_port_t -p tcp 9876
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;audit2allow&#34;&gt;audit2allow&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Create Custom SELinux Policy Module&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;grep smtpd_t /var/log/audit/audit.log | audit2allow -m postgreylocal &amp;gt; postgreylocal.te
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>AWK</title>
+      <link>https://danielkraic.github.io/2016/01/19/awk/</link>
+      <pubDate>Tue, 19 Jan 2016 22:43:51 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2016/01/19/awk/</guid>
+      <description>
+
+&lt;h1 id=&#34;awk&#34;&gt;AWK&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;FILENAME&lt;/code&gt; : current input file name( do not change variable name)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;FR&lt;/code&gt; : number of the current input line (that is input line 1, 2, 3… so on, do not change variable name)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;NF&lt;/code&gt; : number of fields in current input line (do not change variable name)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;OFS&lt;/code&gt; : output field separator&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;FS&lt;/code&gt; : input field separator&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ORS&lt;/code&gt; : output record separator&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;RS&lt;/code&gt; : input record separator&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# NR, NF
+awk &#39; END { print &amp;quot;Number of records in file is: &amp;quot;, NR } &#39; file.txt
+awk &#39;{ print &amp;quot;Record:&amp;quot;,NR,&amp;quot;has&amp;quot;,NF,&amp;quot;fields&amp;quot; ; }&#39; file.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# FS
+awk -F&#39;:&#39; &#39;{ print $1, $4 ;}&#39; /etc/passwd
+awk &#39; BEGIN {  FS=“:” ; }  { print $1, $4  ; } &#39; /etc/passwd
+awk -F&#39;:&#39; &#39; BEGIN { OFS=&amp;quot;==&amp;gt;&amp;quot; ;} { print $1, $4 ;}&#39; /etc/passwd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# regex
+awk &#39;/localhost/{print}&#39; /etc/hosts
+awk &#39;/l.c/{print}&#39; /etc/hosts
+awk &#39;/l*c/{print}&#39; /etc/hosts
+awk &#39;/[0-9]/{print}&#39; /etc/hosts
+awk &#39;/^fe/{print}&#39; /etc/hosts
+awk &#39;/ab$/{print}&#39; /etc/hosts
+awk &#39;/\$25.00/{print}&#39; deals.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# print
+awk &#39;{print $1 $2 $3 }&#39; file.txt
+awk &#39;{print $1, $2, $3; }&#39; file.txt
+awk &#39;{printf &amp;quot;%-10s %s\n&amp;quot;,$2, $3 }&#39; file.txt
+awk &#39;/^..$/ {print &amp;quot;DVA&amp;quot;, $0} /^...$/ { print &amp;quot;TRI&amp;quot;, $0}&#39; file.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# operators
+awk &#39;$3 &amp;lt;= 30 { print}&#39; file.txt
+awk &#39;$3 &amp;lt;= 30 &amp;amp;&amp;amp; $3 != 0 { print}&#39; file.txt
+awk &#39;$3 &amp;lt;= 30 { print &amp;quot;small&amp;quot; } $3 &amp;gt; 30 { print &amp;quot;large&amp;quot; }&#39; file.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;awk -f file.awk in_file
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Grep</title>
+      <link>https://danielkraic.github.io/2015/11/12/grep/</link>
+      <pubDate>Thu, 12 Nov 2015 19:41:10 +0100</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/11/12/grep/</guid>
+      <description>
+
+&lt;h1 id=&#34;grep&#34;&gt;Grep&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;-i Ignore case
+-v Invert match
+-c Count of matches
+-l File names only
+-n Lines numbers
+-h No file name
+-f Regex from file
+-P Use Perl regex
+-A num
+-B num
+-r Search recursively
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;grep:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;*
+.
+^ $
+[...] [^...]
+\n
+\(...\)
+\{i\} \{i,j\} \{i,\}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;GNU grep:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;\? \+
+\b \B
+\w \W
+\s \S
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;grep -E:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+ ? |
+() {i} {i,j} {i,}
+[:alpha:] space digit lower upper
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;grep -P:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;\d \D \A \Z
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Screen</title>
+      <link>https://danielkraic.github.io/2015/09/24/screen/</link>
+      <pubDate>Thu, 24 Sep 2015 16:32:52 +0200</pubDate>
+      
+      <guid>https://danielkraic.github.io/2015/09/24/screen/</guid>
+      <description>
+
+&lt;h3 id=&#34;shell-commands&#34;&gt;Shell commands&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;screen&lt;/td&gt;
+&lt;td&gt;start screen&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen -S name&lt;/td&gt;
+&lt;td&gt;screate session with name&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen -L&lt;/td&gt;
+&lt;td&gt;start screen and enable logging&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen -ls&lt;/td&gt;
+&lt;td&gt;list pid&amp;rsquo;s of reattached sessions&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen -r&lt;/td&gt;
+&lt;td&gt;reattach session&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen -r 7849&lt;/td&gt;
+&lt;td&gt;reattach session&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;screen –x&lt;/td&gt;
+&lt;td&gt;attach  to  a not detached screen session&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;screen-commands&#34;&gt;Screen commands&lt;/h3&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Command&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ctrl a ?&lt;/td&gt;
+&lt;td&gt;help&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a d&lt;/td&gt;
+&lt;td&gt;deattach session&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a c&lt;/td&gt;
+&lt;td&gt;create new window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a n&lt;/td&gt;
+&lt;td&gt;go to next window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a p&lt;/td&gt;
+&lt;td&gt;go to previous window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a Ctrl a&lt;/td&gt;
+&lt;td&gt;jump to most recently visited window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a 4&lt;/td&gt;
+&lt;td&gt;go to window #4&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a w&lt;/td&gt;
+&lt;td&gt;list all windows&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a &amp;ldquo;&lt;/td&gt;
+&lt;td&gt;show navigation menu&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a A&lt;/td&gt;
+&lt;td&gt;rename current window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a x&lt;/td&gt;
+&lt;td&gt;lock session&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a k&lt;/td&gt;
+&lt;td&gt;kill curent window&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a &lt;/td&gt;
+&lt;td&gt;kill all windows adn quit&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a K&lt;/td&gt;
+&lt;td&gt;kill session&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a H&lt;/td&gt;
+&lt;td&gt;start/stop logging&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a M&lt;/td&gt;
+&lt;td&gt;monitor window for activity&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a _&lt;/td&gt;
+&lt;td&gt;monitor window for activity (silence or no output)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a S&lt;/td&gt;
+&lt;td&gt;horizontal split&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a |&lt;/td&gt;
+&lt;td&gt;vertical split&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a [tab]&lt;/td&gt;
+&lt;td&gt;move between regions&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a X&lt;/td&gt;
+&lt;td&gt;kill current region&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Ctrl a Q&lt;/td&gt;
+&lt;td&gt;go back to single region&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

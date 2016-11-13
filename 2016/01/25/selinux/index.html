@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Selinux &middot; </title>
+        <meta name="description" content="Selinux ls -Z ~/.bashrc #unconfined_u:object_r:user_home_t:s0 # user: unconfined_u # role: object_r # type: user_home_t # level: s0 states and modes getenforce #Enforcing setenforce 0 getenforce #Permissive setenforce 1 getenforce #Enforcing status sestatus semanage SELinux Policy Management tool semanage login -l seinfo - SELinux policy query tool seinfo -r # list roles seinfo -b | grep http | grep cgi SELinux contexts for running processes ps -eZ SELinux context associated with">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.17-DEV" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/normalize.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/highlight.css">
+        <link rel="stylesheet" href="https://danielkraic.github.io/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://danielkraic.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="danielkraic">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Gitlab" title="Gitlab" href="danielkraic">
+                                <i class="fa fa-gitlab"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="danielkraic">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="danielkraic">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="danielkraic">
+                                <i class="fa fa-google-plus"></i>
+                            </a>
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Selinux</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2016-01-25" itemprop="datePublished">Mon, Jan 25, 2016</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author"></a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<h1 id="selinux">Selinux</h1>
+
+<pre><code class="language-bash">ls -Z ~/.bashrc
+#unconfined_u:object_r:user_home_t:s0
+# user:  unconfined_u
+# role:  object_r
+# type:  user_home_t
+# level: s0
+</code></pre>
+
+<h2 id="states-and-modes">states and modes</h2>
+
+<pre><code class="language-bash">getenforce
+#Enforcing
+</code></pre>
+
+<pre><code class="language-bash">setenforce 0
+getenforce
+#Permissive
+</code></pre>
+
+<pre><code class="language-bash">setenforce 1
+getenforce
+#Enforcing
+</code></pre>
+
+<h1 id="status">status</h1>
+
+<pre><code class="language-bash">sestatus
+</code></pre>
+
+<h1 id="semanage">semanage</h1>
+
+<p><strong>SELinux Policy Management tool</strong></p>
+
+<pre><code class="language-bash">semanage login -l
+</code></pre>
+
+<p><strong>seinfo - SELinux policy query tool</strong></p>
+
+<pre><code>seinfo -r # list roles
+seinfo -b | grep http | grep cgi
+</code></pre>
+
+<p><strong>SELinux contexts for running processes</strong></p>
+
+<pre><code class="language-bash">ps -eZ
+</code></pre>
+
+<p><strong>SELinux context associated with your Linux user</strong></p>
+
+<pre><code class="language-bash">id -Z
+</code></pre>
+
+<h1 id="chcon">chcon</h1>
+
+<p><strong>change file SELinux security context</strong></p>
+
+<pre><code class="language-bash">chcon -t samba_share_t /var/www/html/testfile
+</code></pre>
+
+<p><strong>make http unconfined (not using selinux labels)</strong></p>
+
+<pre><code class="language-bash">ls -Z /usr/sbin/httpd
+chcon -t unconfined_exec_t /usr/sbin/httpd
+ls -Z /usr/sbin/httpd
+#restore
+restorecon -v /usr/sbin/httpd
+</code></pre>
+
+<pre><code class="language-bash">useradd newuser 
+passwd newuser 
+id -Z
+userdel -r newuser
+</code></pre>
+
+<h2 id="config">config</h2>
+
+<pre><code class="language-bash">vim /etc/selinux/config
+</code></pre>
+
+<h2 id="booleans">booleans</h2>
+
+<h3 id="list">list</h3>
+
+<pre><code class="language-bash">semanage boolean -l
+</code></pre>
+
+<h3 id="get">get</h3>
+
+<pre><code>getsebool -a
+getsebool allow_console_login
+getsebool allow_console_login allow_cvs_read_shadow allow_daemons_dump_core
+</code></pre>
+
+<h3 id="set">set</h3>
+
+<pre><code>getsebool httpd_can_network_connect_db
+setsebool httpd_can_network_connect_db on
+setsebool -P httpd_can_network_connect_db on # make changes persistent across reboots
+getsebool httpd_can_network_connect_db
+</code></pre>
+
+<h2 id="labelig-files">labelig files</h2>
+
+<pre><code class="language-bash">ls -Z file1
+</code></pre>
+
+<h3 id="chcon-1">chcon</h3>
+
+<pre><code class="language-bash">#changes SELinux context for files (changes do not survive system relabel or restorecon)
+chcon -t type file-name 
+chcon -R -t type directory-name
+chcon -v --type=httpd_sys_content_t /html
+chcon -Rv --type=httpd_sys_content_t /html
+semanage fcontext -a -t httpd_sys_content_t &quot;/html(/.*)?&quot; 
+</code></pre>
+
+<pre><code>ls -Z file1
+chcon -t httpd_sys_content_t file1
+restorecon -v file1
+</code></pre>
+
+<h2 id="ports">ports</h2>
+
+<pre><code class="language-bash">semanage port -l | grep http
+semanage port -a -t http_port_t -p tcp 9876
+</code></pre>
+
+<h2 id="audit2allow">audit2allow</h2>
+
+<p><strong>Create Custom SELinux Policy Module</strong></p>
+
+<pre><code class="language-bash">grep smtpd_t /var/log/audit/audit.log | audit2allow -m postgreylocal &gt; postgreylocal.te
+</code></pre>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+                 <a href="https://danielkraic.github.io/tags/tools/">tools</a>
+            
+                 <a href="https://danielkraic.github.io/tags/centos/">centos</a>
+            
+        </p>
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="https://twitter.com/share?text=Selinux&url=https%3a%2f%2fdanielkraic.github.io%2f2016%2f01%2f25%2fselinux%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanielkraic.github.io%2f2016%2f01%2f25%2fselinux%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2fdanielkraic.github.io%2f2016%2f01%2f25%2fselinux%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://danielkraic.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+        <script src="https://danielkraic.github.io/js/jquery.fitvids.js"></script>
+        <script src="https://danielkraic.github.io/js/scripts.js"></script>
+    </body>
+</html>
+
