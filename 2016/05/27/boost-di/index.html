@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Boost DI &middot; </title>
+        <title>Boost DI &middot; Daniel Kraic</title>
         <meta name="description" content="Boost::DI C&#43;&#43;14 header only Dependency Injection library with no dependencies Dependency Injection (DI) involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state. Example No dependency injection class coffee_maker { public: // create dependencies in the constructor coffee_maker() : heater(std::make_shared&lt;electric_heater&gt;()) , pump(std::make_unique&lt;heat_pump&gt;(heater)) { } void brew() { heater-&gt;on(); pump-&gt;pump(); } private: std::shared_ptr&lt;iheater&gt; heater; std::unique_ptr&lt;ipump&gt; pump; }; Dependency injection class coffee_maker { public: // inject dependencies via constructor coffee_maker(std::shared_ptr&lt;iheater&gt; heater, std::unique_ptr&lt;ipump&gt; pump) : heater(heater), pump(std::move(pump)) { } void brew() { heater-&gt;on(); pump-&gt;pump(); } private: std::shared_ptr&lt;iheater&gt; heater; std::unique_ptr&lt;ipump&gt; pump; }; Motivation DI provides loosely coupled code (separation of business logic and object creation) DI provides easier to maintain code (different objects might be easily injected) DI provides easier to test code (fakes objects might be injected) Examples Example 1 app struct renderer { int device; }; class iview { public: virtual ~iview() = default; virtual void update() = 0; }; class model {}; class controller { public: controller(model&amp;, view&amp;) {} }; class user {}; class app { public: app(controller&amp;, user&amp;) {} }; usual approach to create app renderer renderer_; view view_{&quot;title&quot;, renderer_}; model model_; controller controller_{model_, view_}; user user_; app app_{controller_, user_}; create app with boost::di auto app = di::make_injector().create&lt;app&gt;(); Example 2 class controller; struct renderer { int device; }; class view { public: view(std::string /*title*/, const renderer&amp;) {} }; class model {}; class user {}; class app { public: app(controller&amp;, user&amp;) {} }; /// CREATE OBJECTS TREE class controller { public: controller(model&amp;, view&amp;) {} }; int main() { /// NO DEPENDENCY INJECTION { renderer renderer_; view view_{&quot;&quot;, renderer_}; model model_; controller controller_{model_, view_}; user user_; app app_{controller_, user_}; (void)app_; } /// DEPENDENCY INJECTION { auto injector = di::make_injector(); auto app_ = injector.create&lt;app&gt;(); (void)app_; } } /// CHANGE CONTROLLER CONSTRUCTOR ORDER class controller { public: controller(view&amp;, model&amp;) {} }; int main() { /// NO DEPENDENCY INJECTION { renderer renderer_; view view_{&quot;&quot;, renderer_}; model model_; //controller controller_{model_, view_}; controller controller_{view_, model_}; /// CHANGE user user_; app app_{controller_, user_}; (void)app_; } /// DEPENDENCY INJECTION { auto injector = di::make_injector(); auto app_ = injector.create&lt;app&gt;(); (void)app_; } } /// ADD A NEW DEPENDENCY TO CONTROLLER struct configuration {}; class controller { public: controller(view&amp;, model&amp;, configuration) {} }; int main() { /// NO DEPENDENCY INJECTION { renderer renderer_; view view_{&quot;&quot;, renderer_}; model model_; //controller controller_{model_, view_}; controller controller_{view_, model_, configuration{}}; /// CHANGE user user_; app app_{controller_, user_}; (void)app_; } /// DEPENDENCY INJECTION { auto injector = di::make_injector(); auto app_ = injector.create&lt;app&gt;(); (void)app_; } } Bindings interfaces class iview { public: virtual ~iview() noexcept = default; virtual void update() =0; }; class gui_view: public iview { public: gui_view(std::string title, const renderer&amp;) {} void update() override {} }; class text_view: public iview { public: void update() override {} }; auto injector = di::make_injector( di::bind&lt;iview&gt;.to&lt;gui_view&gt;() // bind interface to implementation ); struct T { // create using uniform initialization int&amp; a; // might be used to serialize double b; }; auto i = 42; auto injector = di::make_injector( di::bind&lt;int&gt;.to(i), di::bind&lt;double&gt;.to(87.0) ); injector.create&lt;T&gt;(); // will create T{i, 87.0}; auto use_gui_view = true/false; auto injector = di::make_injector( di::bind&lt;iview&gt;.to([&amp;](const auto&amp; injector) -&gt; iview&amp; { return use_gui_view ?">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
@@ -26,33 +26,37 @@
                     <div class="site-title-wrapper">
                         
                             <h1 class="site-title">
-                                <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                                <a title="Linux notes" href="https://danielkraic.github.io/">Linux notes</a>
                             </h1>
                         
                         <a class="button-square" href="https://danielkraic.github.io/index.xml"><i class="fa fa-rss"></i></a>
                         
-                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="danielkraic">
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/danielkraic">
                                 <i class="fa fa-twitter"></i>
                             </a>
                         
                         
-                            <a class="button-square button-social hint--top" data-hint="Gitlab" title="Gitlab" href="danielkraic">
+                            <a class="button-square button-social hint--top" data-hint="Gitlab" title="Gitlab" href="https://gitlab.com/danielkraic">
                                 <i class="fa fa-gitlab"></i>
                             </a>
                         
                         
-                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="danielkraic">
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/danielkraic">
                                 <i class="fa fa-github-alt"></i>
                             </a>
                         
                         
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/6247807/dkraic">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
                         
-                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="danielkraic">
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/danielkraic/">
                                 <i class="fa fa-linkedin"></i>
                             </a>
                         
                         
-                            <a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="danielkraic">
+                            <a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="https://google.com/&#43;danielkraic">
                                 <i class="fa fa-google-plus"></i>
                             </a>
                         
@@ -77,7 +81,7 @@
         <span>by</span>
         <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
             <span itemprop="name">
-                <a href="" itemprop="url" rel="author"></a>
+                <a href="https://danielkraic.github.io/" itemprop="url" rel="author">Daniel Kraic</a>
             </span>
         </span>
     </p>
@@ -404,7 +408,7 @@ assert(dynamic_cast&lt;text_view*&gt;(
             <div class="container">
                 <div class="site-title-wrapper">
                     <h1 class="site-title">
-                        <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                        <a title="Linux notes" href="https://danielkraic.github.io/">Linux notes</a>
                     </h1>
                     <a class="button-square button-jump-top js-jump-top" href="#">
                         <i class="fa fa-angle-up"></i>

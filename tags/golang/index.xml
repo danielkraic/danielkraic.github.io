@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Golang on Linux blog</title>
+    <title>Golang on Linux notes</title>
     <link>https://danielkraic.github.io/tags/golang/</link>
-    <description>Recent content in Golang on Linux blog</description>
+    <description>Recent content in Golang on Linux notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 14 Sep 2015 20:06:13 +0200</lastBuildDate>

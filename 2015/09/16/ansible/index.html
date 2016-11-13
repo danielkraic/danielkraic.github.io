@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Ansible &middot; </title>
+        <title>Ansible &middot; Daniel Kraic</title>
         <meta name="description" content="Ansible is a free software platform for configuring and managing computers. It combines multi-node software deployment, ad hoc task execution, and configuration management. It manages nodes over SSH or PowerShell and requires Python (2.4 or later) to be installed on them. The system uses YAML to express reusable descriptions of systems. Installation Install from PPA sudo apt-get install software-properties-common sudo apt-add-repository ppa:ansible/ansible sudo apt-get update sudo apt-get install ansible Install with pip sudo pip install ansible Configuration Add localhost to hosts file echo &quot;localhost ansible_connection=local&quot; &gt; ~/ansible_hosts export ANSIBLE_INVENTORY=~/ansible_hosts Setup SSH-agent ssh-agent bash ssh-add ~/.ssh/id_rsa Inventory [webservers] www[01:50].example.com [databases] db-[a:f].example.com [targets] localhost ansible_connection=local other1.example.com ansible_connection=ssh ansible_ssh_user=mpdehaan other2.example.com ansible_connection=ssh ansible_ssh_user=mdehaan Ad-Hoc Commands Patterns ansible &lt;pattern_goes_here&gt; -m &lt;module_name&gt; -a &lt;arguments&gt; Ping hosts # ping ansible all -m ping # ask ssh password ansible all -m ping --ask-pass # as bruce $ ansible all -m ping -u bruce # as bruce, sudoing to root $ ansible all -m ping -u bruce --sudo # as bruce, sudoing to batman $ ansible all -m ping -u bruce --sudo --sudo-user batman Run command ansible localhost -a &quot;/bin/echo hello&quot; ansible localhost -a &quot;uname -a&quot; ansible localhost -m shell -a &#39;echo $TERM&#39; Run command in parallel ansible atlanta -a &quot;/sbin/reboot&quot; -f 10 Run as other user with sudo ansible atlanta -a &quot;/usr/bin/foo&quot; -u username --sudo [--ask-sudo-pass] File # create file and set permissions ansible webservers -m file -a &quot;dest=/srv/foo/b.txt mode=600 owner=mdehaan group=mdehaan&quot; # create directory ansible webservers -m file -a &quot;dest=/path/to/c mode=755 owner=mdehaan group=mdehaan state=directory&quot; # delete file ansible webservers -m file -a &quot;dest=/path/to/c state=absent&quot; Copy # copy file ansible atlanta -m copy -a &quot;src=/etc/hosts dest=/tmp/hosts&quot; ansible atlanta -m copy -a &quot;src=/srv/myfiles/foo.conf dest=/etc/foo.conf owner=foo group=foo mode=0644 backup=yes&quot; ansible atlanta -m copy -a &quot;src=/mine/sudoers dest=/etc/sudoers validate=&#39;visudo -cf %s&#39;&quot; Fetch # fetch file from remote node ansible atlanta -m fetch -a &quot;src=/tmp/somefile dest=/tmp/fetched&quot; ansible atlanta -m fetch -a &quot;src=/tmp/somefile dest=/tmp/prefix-{{ ansible_hostname }} flat=yes&quot; Service ansible webservers -m service -a &quot;name=httpd state=started&quot; ansible webservers -m service -a &quot;name=httpd state=stopped&quot; ansible webservers -m service -a &quot;name=httpd state=restarted&quot; ansible webservers -m service -a &quot;name=httpd enabled=yes&quot; APT # update repositories cache and install package ansible local -m apt -a &quot;name=foo update_cache=yes&quot; # install latest version of package ansible local -m apt -a &quot;name=foo state=latest&quot; # install version &#39;1.00&#39; of package &quot;foo&quot; ansible local -m apt -a &quot;name=foo=1.00 state=present&quot; # remove package ansible local -m apt -a &quot;name=foo state=absent&quot; # equivalent of &quot;apt-get update&quot; ansible local -m apt -a &quot;update_cache=yes&quot; # install local deb file ansible local -m apt -a &quot;deb=/tmp/mypackage.deb&quot; APT repository ansible local -m apt_repository -a &quot;repo=&#39;deb http://archive.canonical.com/ubuntu hardy partner&#39; state=present&quot; ansible local -m apt_repository -a &quot;repo=&#39;deb http://archive.canonical.com/ubuntu hardy partner&#39; state=absent&quot; ansible local -m apt_repository -a &quot;repo=&#39;ppa:nginx/stable&#39;&quot; Shell # execute the command in remote shell ansible webserver -m shell -a &quot;somescript.sh &gt;&gt; somelog.txt&quot; # change the working directory to somedir/ before executing the command.">
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
@@ -26,33 +26,37 @@
                     <div class="site-title-wrapper">
                         
                             <h1 class="site-title">
-                                <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                                <a title="Linux notes" href="https://danielkraic.github.io/">Linux notes</a>
                             </h1>
                         
                         <a class="button-square" href="https://danielkraic.github.io/index.xml"><i class="fa fa-rss"></i></a>
                         
-                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="danielkraic">
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/danielkraic">
                                 <i class="fa fa-twitter"></i>
                             </a>
                         
                         
-                            <a class="button-square button-social hint--top" data-hint="Gitlab" title="Gitlab" href="danielkraic">
+                            <a class="button-square button-social hint--top" data-hint="Gitlab" title="Gitlab" href="https://gitlab.com/danielkraic">
                                 <i class="fa fa-gitlab"></i>
                             </a>
                         
                         
-                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="danielkraic">
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/danielkraic">
                                 <i class="fa fa-github-alt"></i>
                             </a>
                         
                         
+                            <a class="button-square button-social hint--top" data-hint="Stack Overflow" title="Stack Overflow" href="http://stackoverflow.com/users/6247807/dkraic">
+                                <i class="fa fa-stack-overflow"></i>
+                            </a>
                         
-                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="danielkraic">
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/danielkraic/">
                                 <i class="fa fa-linkedin"></i>
                             </a>
                         
                         
-                            <a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="danielkraic">
+                            <a class="button-square button-social hint--top" data-hint="Google+" title="Google+" href="https://google.com/&#43;danielkraic">
                                 <i class="fa fa-google-plus"></i>
                             </a>
                         
@@ -77,7 +81,7 @@
         <span>by</span>
         <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
             <span itemprop="name">
-                <a href="" itemprop="url" rel="author"></a>
+                <a href="https://danielkraic.github.io/" itemprop="url" rel="author">Daniel Kraic</a>
             </span>
         </span>
     </p>
@@ -399,7 +403,7 @@ ansible webserver -m lineinfile -a 'dest=/tmp/testfile line=&quot;192.168.1.99 f
             <div class="container">
                 <div class="site-title-wrapper">
                     <h1 class="site-title">
-                        <a title="Linux blog" href="https://danielkraic.github.io/">Linux blog</a>
+                        <a title="Linux notes" href="https://danielkraic.github.io/">Linux notes</a>
                     </h1>
                     <a class="button-square button-jump-top js-jump-top" href="#">
                         <i class="fa fa-angle-up"></i>

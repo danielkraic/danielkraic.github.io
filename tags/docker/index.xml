@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Docker on Linux blog</title>
+    <title>Docker on Linux notes</title>
     <link>https://danielkraic.github.io/tags/docker/</link>
-    <description>Recent content in Docker on Linux blog</description>
+    <description>Recent content in Docker on Linux notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 19 Oct 2015 22:50:24 +0200</lastBuildDate>
