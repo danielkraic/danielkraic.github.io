@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css">
+  </head>
+  <body>
+
+    <a href="https://github.com/danielkraic/json-validator-site">
+      <img style="position: absolute; top: 0; right: 0; border: 0;"
+            src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+            alt="Fork me on GitHub"
+            data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+
+    <div class="container">
+
+      <div class="page-header">
+        <h1><a href="/">JSON Validator</a> <small>version 0.4</small></h1>
+      </div>
+
+      <form action="javascript:validateJson()">
+        <div class="form-group">
+         <label for="json string">Json:</label>
+         <textarea required id="validatorSrc" name="jsondata" class="form-control" rows="10"></textarea>
+         <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+      
+      <div id="validatorOk"  style="display: none;" class="alert alert-success" role="alert">JSON is valid.</div>
+      <div id="validatorErr" style="display: none;" class="alert alert-danger" role="alert">JSON is not valid.</div>
+      
+    </div> <!-- /container -->
+
+    
+    <div class="container">
+      <pre id="validatorDest" style="display: none;" ><code id="validatorResult" class="json"></code></pre>
+    </div> <!-- /container -->
+    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script type="text/javascript">
+      var EL_SRC  = "validatorSrc";
+      var EL_DEST = "validatorDest";
+      var EL_RESULT = "validatorResult";
+      var EL_OK   = "validatorOk";
+      var EL_ERR  = "validatorErr";
+
+      log = function(msg) {
+        console.log("json validator: " + msg);
+      }
+
+      function validateJson() {
+        var el_src = document.getElementById(EL_SRC);
+        if (!el_src) {
+          log("Unable to validate json. Element " + EL_SRC + " not found!");
+          return;
+        }
+      
+        try {
+          var json_data = JSON.parse(el_src.value);
+          validationOk(json_data)
+        } catch (e) {
+          validationFailed(e);
+        }
+      }
+
+      function validationOk(json_data) {
+          show_element(EL_DEST);
+          show_element(EL_OK);
+          hide_element(EL_ERR);
+
+          var el_dest = document.getElementById(EL_RESULT);
+          if (!el_dest) {
+             log("Unable to show formated json. Element " + EL_DEST + " not found!");
+             return;
+          }
+          el_dest.innerHTML = JSON.stringify(json_data, null, 2);
+      }
+
+      function validationFailed(error) {
+          hide_element(EL_DEST);
+          hide_element(EL_OK);
+          show_element(EL_ERR);
+
+          var el_err = document.getElementById(EL_ERR);
+          if (!el_err) {
+             log("Unable to show error string. Element " + EL_ERR + " not found!");
+             return;
+          }
+          el_err.innerHTML = "JSON is not valid: " + error;
+      }
+
+      function show_element(element_id) {
+        set_element_display_style(element_id, '');
+      }
+
+      function hide_element(element_id) {
+        set_element_display_style(element_id, 'none');        
+      }
+
+      function set_element_display_style(element_id, display_style) {
+        var el = document.getElementById(element_id);
+        if (el) {
+          el.style.display = display_style;
+        } else {
+          log('Unable to set element display style. Element ' + element_id + ' not found');
+        }
+      }
+
+    </script>
+
+  </body>
+</html>
