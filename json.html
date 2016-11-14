@@ -56,6 +56,10 @@
         console.log("json validator: " + msg);
       }
 
+      function clear_rsyslog_escapes(data) {
+        return data.replace(/#\d+/g, '')
+      }
+
       function validateJson() {
         var el_src = document.getElementById(EL_SRC);
         if (!el_src) {
@@ -64,7 +68,7 @@
         }
       
         try {
-          var json_data = JSON.parse(el_src.value);
+          var json_data = JSON.parse(clear_rsyslog_escapes(el_src.value));
           validationOk(json_data)
         } catch (e) {
           validationFailed(e);
